@@ -1,0 +1,18 @@
+---
+- name: Check if Node-RED is already installed
+  stat:
+    path: "/usr/bin/node-red-pi"
+  register: nodered_bin
+
+- name: Install current node.js and Node-RED
+  shell: "yes | bash <(curl -sL https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered)"
+  become: yes
+  become_user: "{{ rpi_nodered_user }}"
+  when: nodered_bin.stat.exists == false or rpi_nodered_force_install
+
+- name: Enable Node-RED service
+  systemd:
+    daemon_reload: yes
+    name: nodered
+    enabled: yes
+    state: started

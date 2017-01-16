@@ -1,0 +1,22 @@
+---
+- name: Install rpi packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - build-essential
+    - git
+    - htop
+    - man-db
+    - picocom
+
+- name: Copy wpa_supplicant config
+  template:
+    src: wpa_supplicant.conf.j2
+    dest: /etc/wpa_supplicant/wpa_supplicant.conf
+
+- name: Install Node-RED
+  include: nodered.yml
+  when: rpi_nodered

@@ -1,0 +1,4 @@
+---
+rpi_nodered: false
+rpi_nodered_user: "pi"
+rpi_nodered_force_install: false

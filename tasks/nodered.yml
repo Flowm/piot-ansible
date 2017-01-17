@@ -7,27 +7,11 @@
 - name: Install current node.js and Node-RED
   shell: "yes | bash <(curl -sL https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered)"
   args:
-    chdir: "/home/{{ rpi_nodered_user }}"
+    chdir: "{{ rpi_nodered_home }}"
     executable: "/bin/bash"
   become: yes
   become_user: "{{ rpi_nodered_user }}"
   when: nodered_bin.stat.exists == false or rpi_nodered_force_install
-
-- name: Install Node-RED extra nodes
-  shell: "npm install {{ item }}"
-  args:
-    chdir: "/home/{{ rpi_nodered_user }}/.node-red"
-    creates: "/home/{{ rpi_nodered_user }}/.node-red/node_modules/{{ item }}"
-  become: yes
-  become_user: "{{ rpi_nodered_user }}"
-  with_items:
-    - node-red-node-sqlite
-    - node-red-contrib-telegrambot
-    - node-red-dashboard
-
-- name: Install Node-RED neopixel
-  include: nodered-neopixel.yml
-  when: rpi_nodered_neopixel
 
 
 - name: Enable Node-RED service
@@ -36,3 +20,25 @@
     name: nodered
     enabled: yes
     state: started
+
+- name: Wait for initial Node-RED start
+  wait_for:
+    path: "{{ rpi_nodered_dir }}"
+
+
+- name: Install Node-RED extra nodes
+  shell: "npm install {{ item }}"
+  args:
+    chdir: "{{ rpi_nodered_dir }}"
+    creates: "{{ rpi_nodered_dir }}/node_modules/{{ item }}"
+  become: yes
+  become_user: "{{ rpi_nodered_user }}"
+  with_items:
+    - node-red-node-sqlite
+    - node-red-contrib-telegrambot
+    - node-red-dashboard
+
+
+- name: Install Node-RED neopixel
+  include: nodered-neopixel.yml
+  when: rpi_nodered_neopixel

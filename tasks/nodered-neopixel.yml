@@ -3,19 +3,19 @@
   # Interactive installer must be executed manually if desired
   get_url:
     url: https://get.pimoroni.com/unicornhat
-    dest: "/home/{{ rpi_nodered_user }}/unicornhat-install.sh"
+    dest: "{{ rpi_nodered_home }}/unicornhat-install.sh"
     mode: 0440
 
 - name: Check if unicornhat is installed
   stat:
-    path: "/home/{{ rpi_nodered_user }}/Pimoroni/unicornhat/examples/README.md"
+    path: "{{ rpi_nodered_home }}/Pimoroni/unicornhat/examples/README.md"
   register: nodred_unicornhat_md
 
 - name: Install node-red extra node neopixel
   shell: "npm install {{ item }}"
   args:
-    chdir: "/home/{{ rpi_nodered_user }}/.node-red"
-    creates: "/home/{{ rpi_nodered_user }}/.node-red/node_modules/{{ item }}"
+    chdir: "{{ rpi_nodered_dir }}"
+    creates: "{{ rpi_nodered_dir }}/node_modules/{{ item }}"
   become: yes
   become_user: "{{ rpi_nodered_user }}"
   with_items:

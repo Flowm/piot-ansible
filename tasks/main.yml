@@ -12,10 +12,13 @@
     - man-db
     - picocom
 
-- name: Copy wpa_supplicant config
-  template:
-    src: wpa_supplicant.conf.j2
-    dest: /etc/wpa_supplicant/wpa_supplicant.conf
+- name: Configure wifi client
+  include: wifi-client.yml
+  when: rpi_wifi_client
+
+- name: Configure serial port
+  include: serial.yml
+  when: rpi_serial
 
 - name: Install Node-RED
   include: nodered.yml

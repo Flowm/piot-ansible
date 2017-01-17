@@ -12,6 +12,10 @@
     - man-db
     - picocom
 
+- name: Install power button monitor
+  include: power.yml
+  when: rpi_power
+
 - name: Configure wifi client
   include: wifi-client.yml
   when: rpi_wifi_client

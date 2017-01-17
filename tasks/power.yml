@@ -1,0 +1,14 @@
+---
+- name: Copy power button script
+  copy:
+    src: power-button.py
+    dest: /usr/local/sbin/power-button
+    owner: root
+    group: staff
+    mode: 0744
+
+- lineinfile:
+    dest: /etc/rc.local
+    line: "/usr/local/sbin/power-button &"
+    insertbefore: "^exit 0"
+

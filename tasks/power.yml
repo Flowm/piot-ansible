@@ -11,4 +11,3 @@
     dest: /etc/rc.local
     line: "/usr/local/sbin/power-button &"
     insertbefore: "^exit 0"
-

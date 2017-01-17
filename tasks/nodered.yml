@@ -42,3 +42,7 @@
 - name: Install Node-RED neopixel
   include: nodered-neopixel.yml
   when: rpi_nodered_neopixel
+
+- name: Install Mosquitto MQTT broker
+  include: mosquitto.yml
+  when: rpi_nodered_mosquitto

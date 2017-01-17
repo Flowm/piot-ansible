@@ -8,3 +8,4 @@ rpi_nodered_home: "/home/{{ rpi_nodered_user }}"
 rpi_nodered_dir: "{{ rpi_nodered_home }}/.node-red"
 rpi_nodered_force_install: false
 rpi_nodered_neopixel: false
+rpi_nodered_mosquitto: false

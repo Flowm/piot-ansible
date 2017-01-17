@@ -1,0 +1,19 @@
+---
+- name: Install Mosquitto
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - mosquitto
+    - mosquitto-clients
+
+- name: Copy Mosquitto config
+  copy:
+    src: mosquitto-bind.conf
+    dest: /etc/mosquitto/conf.d/bind.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart Mosquitto

@@ -1,12 +1,14 @@
 country=DE
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
+ap_scan=1
 
 {% for item in wlan %}
 
 network={
   ssid="{{ item.ssid }}"
   psk={{ item.psk }}
+  id_str="{{ item.id_str }}"
   priority={{ item.priority }}
 }
 {% endfor %}

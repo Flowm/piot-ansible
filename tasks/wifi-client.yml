@@ -1,4 +1,9 @@
 ---
+- name: Copy network interfaces config
+  template:
+    src: network_interfaces.j2
+    dest: /etc/network/interfaces
+
 - name: Copy wpa_supplicant config
   template:
     src: wpa_supplicant.conf.j2

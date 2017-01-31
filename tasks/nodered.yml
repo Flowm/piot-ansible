@@ -1,4 +1,14 @@
 ---
+- name: Create Node-RED group
+  group:
+    name: "{{ rpi_nodered_user }}"
+    state: present
+- name: Create Node-RED user
+  user:
+    name: "{{ rpi_nodered_user }}"
+    group: "{{ rpi_nodered_user }}"
+    append: yes
+
 - name: Check if Node-RED is already installed
   stat:
     path: "/usr/bin/node-red-pi"

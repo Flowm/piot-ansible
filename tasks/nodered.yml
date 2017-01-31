@@ -14,6 +14,16 @@
     path: "/usr/bin/node-red-pi"
   register: nodered_bin
 
+- name: Temporarily allow nodered user sudo without password for Node-RED installer
+  lineinfile:
+    dest: /etc/sudoers.d/099_ansible-nopasswd-tmp
+    state: present
+    create: yes
+    regexp: "^{{ rpi_nodered_user }}"
+    line: "{{ rpi_nodered_user }} ALL=(ALL) NOPASSWD: ALL"
+    validate: "visudo -cf %s"
+  when: nodered_bin.stat.exists == false or rpi_nodered_force_install
+
 - name: Install current node.js and Node-RED
   shell: "yes | bash <(curl -sL https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered)"
   args:
@@ -23,6 +33,10 @@
   become_user: "{{ rpi_nodered_user }}"
   when: nodered_bin.stat.exists == false or rpi_nodered_force_install
 
+- name: Remove temporary sudo permissions again
+  file:
+    path: /etc/sudoers.d/099_ansible-nopasswd-tmp
+    state: absent
 
 - name: Enable Node-RED service
   systemd:

@@ -7,6 +7,7 @@
   user:
     name: "{{ rpi_nodered_user }}"
     group: "{{ rpi_nodered_user }}"
+    groups: "dialout"
     append: yes
 
 - name: Check if Node-RED is already installed

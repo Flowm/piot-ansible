@@ -15,6 +15,8 @@
         id_str: "example"
         priority: 0
   roles:
+    - role: nginx
+    - role: homeassistant
     - role: rpi
       rpi_nodered: true
       rpi_nodered_mosquitto: true

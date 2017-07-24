@@ -1,0 +1,70 @@
+---
+- name: Install nginx
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 36000
+  with_items:
+    - nginx
+
+
+- name: Copy nginx.conf
+  copy:
+    src: nginx.conf
+    dest: "{{ nginx_conf }}"
+    mode: 0640
+  notify: Restart nginx
+
+- name: Copy available sites
+  copy:
+    src: "{{ item }}"
+    dest: /etc/nginx/sites-available/
+    mode: 0644
+  with_fileglob:
+    - sites-available/*
+  notify: Restart nginx
+
+- name: Disable default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart nginx
+
+- name: Get a list of all remote sites
+  shell: "diff sites-available sites-enabled | grep 'Only in sites-enabled' | sed 's/^.*: //'"
+  args:
+    chdir: /etc/nginx/
+  register: nginx_sites
+  changed_when: false
+
+- name: Disable all other sites
+  file:
+    path: "/etc/nginx/sites-enabled/{{ item }}"
+    state: absent
+  with_items: "{{ nginx_sites.stdout_lines }}"
+
+- name: Enable sites
+  file:
+    src: "/etc/nginx/sites-available/{{ item | basename }}"
+    dest: "/etc/nginx/sites-enabled/{{ item | basename }}"
+    state: link
+  with_fileglob:
+    - sites-available/*
+  notify: Restart nginx
+
+
+- name: Fix webdir permissions
+  file:
+    path: "{{ nginx_webdir }}"
+    state: directory
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
+    recurse: yes
+
+
+- name: Enable nginx service
+  service:
+    name: nginx
+    enabled: yes
+    state: started

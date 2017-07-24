@@ -6,11 +6,17 @@
   with_items:
     - python-pip
     - python3-dev
+    - build-essential
+    - libssl-dev
+    - libffi-dev
+    - libxslt-dev
+    - libxml2-dev
+    - python3-lxml
 
 - name: Install virtualenv
   pip:
     name: virtualenv
-      state: latest
+    state: latest
 
 - name: Create user
   user:
@@ -54,8 +60,11 @@
 #  become_user: homeassistant
 
 - name: Copy homeassistant service
-  file:
+  copy:
     src: "homeassistant.service"
     dest: "/etc/systemd/system/homeassistant.service"
+    owner: root
+    group: root
+    mode: 0644
   notify:
-    - Enable home assistant service
+    - Enable homeassistant service

@@ -32,7 +32,7 @@
     owner: homeassistant
     group: homeassistant
 
-- name: Install homeassistant
+- name: Install latest homeassistant
   pip:
     name: homeassistant
     state: latest
@@ -40,6 +40,8 @@
     virtualenv_python: python3
   become: yes
   become_user: homeassistant
+  notify:
+    - Restart homeassistant service
 
 - name: Create home assistant config dir
   file:
@@ -67,4 +69,4 @@
     group: root
     mode: 0644
   notify:
-    - Enable homeassistant service
+    - Restart homeassistant service

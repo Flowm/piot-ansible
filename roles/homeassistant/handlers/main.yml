@@ -1,5 +1,5 @@
 ---
-- name: Enable homeassistant service
+- name: Restart homeassistant service
   systemd:
     name: homeassistant
     enabled: yes

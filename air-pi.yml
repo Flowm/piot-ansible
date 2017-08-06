@@ -17,6 +17,8 @@
   roles:
     - role: nginx
     - role: homeassistant
+    - role: influxdb
+    - role: grafana
     - role: rpi
       rpi_nodered: true
       rpi_nodered_mosquitto: true

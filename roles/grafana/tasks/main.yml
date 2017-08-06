@@ -1,0 +1,23 @@
+---
+- name: Install bintray gpg key
+  apt_key:
+    url: "https://bintray.com/user/downloadSubjectPublicKey?username=bintray"
+    state: present
+
+- name: Add grafana repository
+  apt_repository:
+    repo: "deb https://dl.bintray.com/fg2it/deb jessie main"
+    state: present
+
+- name: Install grafana package
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - grafana
+
+- name: Enable and start grafana
+  service:
+    name: grafana-server
+    enabled: yes
+    state: started

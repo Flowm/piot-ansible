@@ -1,0 +1,72 @@
+---
+- name: Install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python-pip
+    - python3-dev
+    - build-essential
+    - libssl-dev
+    - libffi-dev
+    - libxslt-dev
+    - libxml2-dev
+    - python3-lxml
+
+- name: Install virtualenv
+  pip:
+    name: virtualenv
+    state: latest
+
+- name: Create user
+  user:
+    name: homeassistant
+    groups: dialout
+    system: yes
+
+- name: Create app dir
+  file:
+    path: /opt/homeassistant
+    state: directory
+    mode: 0755
+    owner: homeassistant
+    group: homeassistant
+
+- name: Install latest homeassistant
+  pip:
+    name: homeassistant
+    state: latest
+    virtualenv: /opt/homeassistant
+    virtualenv_python: python3
+  become: yes
+  become_user: homeassistant
+  notify:
+    - Restart homeassistant service
+
+- name: Create home assistant config dir
+  file:
+    path: /home/homeassistant/.homeassistant
+    state: directory
+    mode: 0755
+    owner: homeassistant
+    group: homeassistant
+  become: yes
+  become_user: homeassistant
+
+#- name: Copy over configuration file
+#  copy:
+#    src: ha-config.yaml
+#    dest: /home/homeassistant/.homeassistant/configuration.yaml
+#    mode: 0755
+#  become: yes
+#  become_user: homeassistant
+
+- name: Copy homeassistant service
+  copy:
+    src: "homeassistant.service"
+    dest: "/etc/systemd/system/homeassistant.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart homeassistant service

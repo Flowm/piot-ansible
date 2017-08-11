@@ -70,3 +70,11 @@
     mode: 0644
   notify:
     - Restart homeassistant service
+
+- name: Enable homeassistant service
+  service:
+    daemon_reload: yes
+    name: homeassistant
+    enabled: yes
+  notify:
+    - Restart homeassistant service

@@ -1,0 +1,14 @@
+[Unit]
+    Description=Ser2mqtt publish serial sensor data over mqtt
+    After=network.target
+    StartLimitIntervalSec=10min
+    StartLimitBurst=10
+
+[Service]
+    ExecStart=/usr/local/bin/ser2mqtt
+    Type=simple
+    WatchdogSec=36000
+    Restart=always
+
+[Install]
+    WantedBy=multi-user.target

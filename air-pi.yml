@@ -15,10 +15,9 @@
         id_str: "example"
         priority: 0
   roles:
+    - role: rpi
     - role: nginx
     - role: homeassistant
+    - role: ser2mqtt
     - role: influxdb
     - role: grafana
-    - role: rpi
-      rpi_nodered: true
-      rpi_nodered_mosquitto: true

@@ -18,5 +18,6 @@
     - role: rpi
     - role: nginx
     - role: homeassistant
+    - role: ser2mqtt
     - role: influxdb
     - role: grafana

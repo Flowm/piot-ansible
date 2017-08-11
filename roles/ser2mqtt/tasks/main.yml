@@ -1,0 +1,47 @@
+---
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - build-essential
+    - git
+    - libmosquitto-dev
+    - libmosquittopp-dev
+
+- name: Copy application
+  copy:
+    src: ../../../ser2mqtt
+    dest: /tmp
+
+- name: Build application
+  make:
+    chdir: /tmp/ser2mqtt
+
+- name: Make install
+  make:
+    chdir: /tmp/ser2mqtt
+    target: install
+  become: yes
+  notify:
+    - Restart ser2mqtt service
+
+- name: Copy ser2mqtt service
+  copy:
+    src: "ser2mqtt.service"
+    dest: "/etc/systemd/system/ser2mqtt.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart ser2mqtt service
+
+- name: Enable ser2mqtt service
+  systemd:
+    daemon_reload: yes
+    name: ser2mqtt
+    enabled: yes
+  notify:
+    - Restart ser2mqtt service

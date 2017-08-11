@@ -1,0 +1,5 @@
+---
+- name: Restart ser2mqtt service
+  systemd:
+    name: ser2mqtt
+    state: restarted

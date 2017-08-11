@@ -2,6 +2,4 @@
 - name: Restart homeassistant service
   systemd:
     name: homeassistant
-    enabled: yes
     state: restarted
-    daemon_reload: yes

@@ -1,7 +1,8 @@
 ---
-rpi_wifi_client: true
+rpi_wifi_client: false
 rpi_serial: true
 rpi_power: true
+
 rpi_nodered: false
 rpi_nodered_user: "nodered"
 rpi_nodered_home: "/home/{{ rpi_nodered_user }}"

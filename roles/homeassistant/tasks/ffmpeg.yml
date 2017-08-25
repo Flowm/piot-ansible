@@ -1,0 +1,18 @@
+---
+- name: Create ffmpeg dir
+  file:
+    path: "/opt/ffmpeg"
+    state: directory
+    mode: 0775
+
+- name: Download static ffmpeg build
+  unarchive:
+    src: "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-armhf-32bit-static.tar.xz"
+    dest: "/opt/ffmpeg/"
+    remote_src: True
+    creates: "/opt/ffmpeg/ffmpeg-*"
+
+- name: Symlink ffmpeg folder
+  command: "ln -fs /opt/ffmpeg/ffmpeg-* /opt/ffmpeg/latest"
+  args:
+    creates: "/opt/ffmpeg/latest"

@@ -78,3 +78,6 @@
     enabled: yes
   notify:
     - Restart homeassistant service
+
+- name: Install ffmpeg
+  include: ffmpeg.yml

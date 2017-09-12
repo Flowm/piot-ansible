@@ -24,6 +24,10 @@
   include: serial.yml
   when: rpi_serial
 
+- name: Install Mosquitto MQTT broker
+  include: mosquitto.yml
+  when: rpi_mosquitto
+
 - name: Install Node-RED
   include: nodered.yml
   when: rpi_nodered

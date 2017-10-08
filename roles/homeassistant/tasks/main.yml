@@ -47,7 +47,7 @@
   file:
     path: /home/homeassistant/.homeassistant
     state: directory
-    mode: 0755
+    mode: 0775
     owner: homeassistant
     group: homeassistant
   become: yes

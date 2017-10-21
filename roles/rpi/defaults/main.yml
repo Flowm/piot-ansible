@@ -1,6 +1,6 @@
 ---
 rpi_wifi_client: false
-rpi_serial: true
+rpi_serial: false
 rpi_power: true
 rpi_mosquitto: true
 

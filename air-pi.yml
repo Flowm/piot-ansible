@@ -21,3 +21,4 @@
     - role: ser2mqtt
     - role: influxdb
     - role: grafana
+    - role: nodered

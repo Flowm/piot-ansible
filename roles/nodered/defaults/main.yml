@@ -1,0 +1,6 @@
+---
+nodered_user: "nodered"
+nodered_home: "/home/{{ nodered_user }}"
+nodered_dir: "{{ nodered_home }}/.node-red"
+nodered_force_install: false
+nodered_neopixel: false

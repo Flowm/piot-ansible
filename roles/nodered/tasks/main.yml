@@ -74,5 +74,5 @@
 
 
 - name: Install Node-RED neopixel
-  include: nodered-neopixel.yml
+  include_tasks: nodered-neopixel.yml
   when: nodered_neopixel

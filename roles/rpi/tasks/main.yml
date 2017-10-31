@@ -13,17 +13,17 @@
     - picocom
 
 - name: Install power button monitor
-  include: power.yml
+  include_tasks: power.yml
   when: rpi_power
 
 - name: Configure wifi client
-  include: wifi-client.yml
+  include_tasks: wifi-client.yml
   when: rpi_wifi_client
 
 - name: Configure serial port
-  include: serial.yml
+  include_tasks: serial.yml
   when: rpi_serial
 
 - name: Install Mosquitto MQTT broker
-  include: mosquitto.yml
+  include_tasks: mosquitto.yml
   when: rpi_mosquitto

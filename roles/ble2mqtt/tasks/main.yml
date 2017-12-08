@@ -1,0 +1,51 @@
+---
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - libbluetooth-dev
+    - libglib2.0-dev
+    - python3-dev
+    - python3-pip
+
+- name: Install virtualenv
+  pip:
+    name: virtualenv
+    state: latest
+    executable: pip3
+
+- name: Copy application
+  copy:
+    src: ../../../ble2mqtt/
+    dest: /opt/ble2mqtt
+  notify:
+    - Restart ble2mqtt service
+
+- name: Install python ble modules
+  pip:
+    requirements: /opt/ble2mqtt/requirements.txt
+    virtualenv: /opt/ble2mqtt
+    virtualenv_command: /usr/bin/python3 -m venv
+  notify:
+    - Restart ble2mqtt service
+
+- name: Copy ble2mqtt service
+  copy:
+    src: "ble2mqtt.service"
+    dest: "/etc/systemd/system/ble2mqtt.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart ble2mqtt service
+
+- name: Enable ble2mqtt service
+  systemd:
+    daemon_reload: yes
+    name: ble2mqtt
+    enabled: yes
+  notify:
+    - Restart ble2mqtt service

@@ -1,0 +1,5 @@
+---
+- name: Restart ble2mqtt service
+  systemd:
+    name: ble2mqtt
+    state: restarted

@@ -43,6 +43,15 @@
   notify:
     - Restart homeassistant service
 
+- name: Install latest pymsql
+  pip:
+    name: mysqlclient
+    state: latest
+    virtualenv: /opt/homeassistant
+    virtualenv_python: python3
+  become: yes
+  become_user: homeassistant
+
 - name: Create home assistant config dir
   file:
     path: /home/homeassistant/.homeassistant

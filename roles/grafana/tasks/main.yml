@@ -6,7 +6,7 @@
 
 - name: Add grafana repository
   apt_repository:
-    repo: "deb https://dl.bintray.com/fg2it/deb jessie main"
+    repo: "deb https://dl.bintray.com/fg2it/deb {{ ansible_distribution_release }} main"
     state: present
 
 - name: Install grafana package

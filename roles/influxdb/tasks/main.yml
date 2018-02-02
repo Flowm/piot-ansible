@@ -5,7 +5,7 @@
     state: present
 
 - apt_repository:
-    repo: "deb https://repos.influxdata.com/debian jessie stable"
+    repo: "deb https://repos.influxdata.com/debian {{ ansible_distribution_release }} stable"
     state: present
 
 - name: Update package cache and install influxdb

@@ -8,17 +8,12 @@
     repo: "deb https://repos.influxdata.com/debian {{ ansible_distribution_release }} stable"
     state: present
 
-- name: Update package cache and install influxdb
+- name: Install influxdb and telegraf
   apt:
-    update_cache: yes
-    cache_valid_time: 36000
     name: "{{ item }}"
     state: present
   with_items:
     - influxdb
-
-- name: Enable and start influxdb
-  service:
-    name: influxdb
-    enabled: yes
-    state: started
+    - telegraf
+  notify:
+    - Restart influxdb

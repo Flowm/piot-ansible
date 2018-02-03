@@ -23,7 +23,3 @@
 - name: Configure serial port
   include_tasks: serial.yml
   when: rpi_serial
-
-- name: Install Mosquitto MQTT broker
-  include_tasks: mosquitto.yml
-  when: rpi_mosquitto

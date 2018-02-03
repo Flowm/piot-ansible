@@ -8,10 +8,11 @@
   with_items:
     - mosquitto
     - mosquitto-clients
+  notify: Restart Mosquitto
 
 - name: Copy Mosquitto config
-  copy:
-    src: mosquitto-bind.conf
+  template:
+    src: mosquitto-bind.conf.j2
     dest: /etc/mosquitto/conf.d/bind.conf
     owner: root
     group: root

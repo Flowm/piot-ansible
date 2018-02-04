@@ -15,15 +15,13 @@
     state: present
   with_items:
     - grafana
+  notify:
+    - Restart grafana
 
 - name: Set base url for nginx proxy
   lineinfile:
     dest: /etc/grafana/grafana.ini
     regexp: "^;?root_url"
     line: "root_url = %(protocol)s://%(domain)s:/grafana"
-
-- name: Enable and start grafana
-  service:
-    name: grafana-server
-    enabled: yes
-    state: started
+  notify:
+    - Restart grafana

@@ -1,0 +1,15 @@
+# Usage:
+# # ansible-playbook -i "devpi," devpi.yml
+#
+# Needs a corresponding .ssh/config entry:
+# # Host devpi
+# # 	 Hostname <IP of RPI>
+# # 	 User pi
+---
+- hosts: all
+  become: true
+  roles:
+    - role: nginx
+    - role: mosquitto
+    - role: influxdb
+    - role: grafana

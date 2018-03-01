@@ -1,13 +1,31 @@
 ---
-- name: Install bintray gpg key
-  apt_key:
-    url: "https://bintray.com/user/downloadSubjectPublicKey?username=bintray"
-    state: present
+- block:
+  - name: Import Grafana GPG signing key [Debian/Ubuntu]
+    apt_key:
+      url: "https://packagecloud.io/gpg.key"
+      state: present
+    when: ansible_architecture == "x86_64"
 
-- name: Add grafana repository
-  apt_repository:
-    repo: "deb https://dl.bintray.com/fg2it/deb {{ ansible_distribution_release }} main"
-    state: present
+  - name: Add Grafana repository [Debian/Ubuntu]
+    apt_repository:
+      repo: "deb https://packagecloud.io/grafana/stable/debian/ {{ ansible_distribution_release }} main"
+      state: present
+      update_cache: yes
+    when: ansible_architecture == "x86_64"
+
+  - name: Import Grafana GPG signing key [Raspbian]
+    apt_key:
+      url: "https://bintray.com/user/downloadSubjectPublicKey?username=bintray"
+      state: present
+    when: ansible_architecture == "armv7l"
+
+  - name: Add Grafana repository [Raspbian]
+    apt_repository:
+      repo: "deb https://dl.bintray.com/fg2it/deb {{ ansible_distribution_release }} main"
+      state: present
+      update_cache: yes
+    when: ansible_architecture == "armv7l"
+  when: ansible_pkg_mgr == "apt"
 
 - name: Install grafana package
   apt:

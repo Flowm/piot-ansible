@@ -16,10 +16,10 @@
         priority: 0
   roles:
     - role: rpi
-    - role: nginx
+    - role: nginx-proxy
     - role: homeassistant
-    - role: ser2mqtt
-    - role: ble2mqtt
     - role: influxdb
     - role: grafana
     #- role: nodered
+    #- role: ser2mqtt
+    #- role: ble2mqtt

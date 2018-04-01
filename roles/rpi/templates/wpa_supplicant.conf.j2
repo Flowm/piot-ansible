@@ -3,7 +3,7 @@ ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 ap_scan=1
 
-{% for item in wlan %}
+{% for item in rpi_wifi %}
 
 network={
   ssid="{{ item.ssid }}"

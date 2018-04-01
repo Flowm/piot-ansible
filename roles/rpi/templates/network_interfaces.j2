@@ -16,6 +16,6 @@ allow-hotplug wlan0
 iface wlan0 inet manual
     wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
 
-{% for item in wlan %}
+{% for item in rpi_wifi %}
 iface {{ item.id_str }} inet dhcp
 {% endfor %}

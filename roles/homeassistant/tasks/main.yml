@@ -70,13 +70,15 @@
 #  become: yes
 #  become_user: homeassistant
 
-- name: Copy homeassistant service
+- name: Copy homeassistant service files
   copy:
-    src: "homeassistant.service"
-    dest: "/etc/systemd/system/homeassistant.service"
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/"
     owner: root
     group: root
     mode: 0644
+  with_fileglob:
+    - systemd/*
   notify:
     - Restart homeassistant service
 
@@ -87,6 +89,13 @@
     enabled: yes
   notify:
     - Restart homeassistant service
+
+- name: Enable homeassistant-restart timer
+  service:
+    daemon_reload: yes
+    name: homeassistant-restart.timer
+    enabled: yes
+    state: started
 
 - name: Install ffmpeg
   include_tasks: ffmpeg.yml

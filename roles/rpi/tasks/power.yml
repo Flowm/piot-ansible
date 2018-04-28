@@ -1,5 +1,5 @@
 ---
-- name: Copy power button script
+- name: Copy power-button script
   copy:
     src: power-button.py
     dest: /usr/local/sbin/power-button
@@ -10,4 +10,19 @@
 - lineinfile:
     dest: /etc/rc.local
     line: "/usr/local/sbin/power-button &"
-    insertbefore: "^exit 0"
+    state: absent
+
+- name: Copy power-button service
+  copy:
+    src: power-button.service
+    dest: /etc/systemd/system/power-button.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable power-button service
+  systemd:
+    daemon_reload: yes
+    name: power-button
+    enabled: yes
+    state: started

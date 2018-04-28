@@ -1,0 +1,12 @@
+[Unit]
+    Description=Monitor GPIO pin and initiate shutdown if pulled low
+    After=network.target
+    StartLimitIntervalSec=10min
+    StartLimitBurst=10
+
+[Service]
+    ExecStart=/usr/local/sbin/power-button
+    Type=simple
+
+[Install]
+    WantedBy=multi-user.target

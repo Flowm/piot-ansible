@@ -6,6 +6,8 @@
 
 [Service]
     Type=simple
+    User={{ mjpg_streamer_user }}
+    Group={{ mjpg_streamer_user }}
     ExecStart=/usr/local/bin/mjpg_streamer -o "output_http.so -w /usr/local/share/mjpg-streamer/www -l 127.0.0.1 -n" -i "input_raspicam.so"
     Restart=always
 

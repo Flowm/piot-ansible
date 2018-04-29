@@ -9,12 +9,24 @@
     - cmake
     - libjpeg8-dev
 
+- name: Create group
+  group:
+    name: "{{ mjpg_streamer_user }}"
+    state: present
+- name: Create user
+  user:
+    name: "{{ mjpg_streamer_user }}"
+    group: "{{ mjpg_streamer_user }}"
+    groups:
+      - video
+    system: yes
+
 - name: Create mjpg-streamer dir
   file:
     path: /opt/mjpg-streamer
     state: directory
-    owner: root
-    group: root
+    owner: "{{ mjpg_streamer_user }}"
+    group: "{{ mjpg_streamer_user }}"
     mode: 0775
 
 - name: Clone mjpg-streamer
@@ -23,6 +35,8 @@
     dest: /opt/mjpg-streamer
     update: no
   register: mjpg_streamer_repo_update
+  become: yes
+  become_user: "{{ mjpg_streamer_user }}"
 
 - name: Check for mjpg-streamer installation
   stat:
@@ -31,9 +45,11 @@
 
 - name: Install mjpg-streamer
   block:
-    - name: Compile mjpg_streamer
+    - name: Compile mjpg-streamer
       shell: "cd /opt/mjpg-streamer/mjpg-streamer-experimental && make"
       register: mjpg_streamer_compilelog
+      become: yes
+      become_user: "{{ mjpg_streamer_user }}"
 
     - debug: var=mjpg_streamer_compilelog.stdout_lines
 
@@ -57,9 +73,9 @@
     group: www-data
     mode: 0644
 
-- name: Copy mjpg-streamer service
-  copy:
-    src: mjpg-streamer.service
+- name: Create mjpg-streamer service
+  template:
+    src: mjpg-streamer.service.j2
     dest: /etc/systemd/system/mjpg-streamer.service
     owner: root
     group: root

@@ -1,2 +1,3 @@
 ---
 mjpg_streamer_force_install: false
+mjpg_streamer_user: mjpg

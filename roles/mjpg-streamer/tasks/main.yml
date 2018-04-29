@@ -1,0 +1,30 @@
+---
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - cmake
+    - libjpeg8-dev
+
+# Install
+
+- name: Copy mjpg-streamer service
+  copy:
+    src: mjpg-streamer.service
+    dest: /etc/systemd/system/mjpg-streamer.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart mjpg-streamer service
+
+- name: Enable mjpg-streamer service
+  systemd:
+    daemon_reload: yes
+    name: mjpg-streamer
+    enabled: yes
+  notify:
+    - Restart mjpg-streamer service

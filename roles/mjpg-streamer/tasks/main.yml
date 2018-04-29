@@ -9,7 +9,53 @@
     - cmake
     - libjpeg8-dev
 
-# Install
+- name: Create mjpg-streamer dir
+  file:
+    path: /opt/mjpg-streamer
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+
+- name: Clone mjpg-streamer
+  git:
+    repo: "https://github.com/jacksonliam/mjpg-streamer.git"
+    dest: /opt/mjpg-streamer
+    update: no
+  register: mjpg_streamer_repo_update
+
+- name: Check for mjpg-streamer installation
+  stat:
+    path: "/usr/local/bin/mjpg_streamer"
+  register: mjpg_streamer_bin
+
+- name: Install mjpg-streamer
+  block:
+    - name: Compile mjpg_streamer
+      shell: "cd /opt/mjpg-streamer/mjpg-streamer-experimental && make"
+      register: mjpg_streamer_compilelog
+
+    - debug: var=mjpg_streamer_compilelog.stdout_lines
+
+    - name: Install mjpg-streamer
+      shell: "cd /opt/mjpg-streamer/mjpg-streamer-experimental && make install"
+  when: mjpg_streamer_bin.stat.exists == false or mjpg_streamer_force_install
+
+- name: Create web dir
+  file:
+    path: /var/www/default
+    state: directory
+    mode: 0755
+    owner: www-data
+    group: www-data
+
+- name: Copy mjpg-streamer html page
+  copy:
+    src: index.html
+    dest: /var/www/default/
+    owner: www-data
+    group: www-data
+    mode: 0644
 
 - name: Copy mjpg-streamer service
   copy:

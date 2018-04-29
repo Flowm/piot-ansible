@@ -6,7 +6,7 @@
 
 [Service]
     Type=simple
-    ExecStart=/usr/local/bin/mjpg_streamer/mjpg_streamer -o "output_http.so -w /usr/local/share/mjpg-streamer/www -l 127.0.0.1 -n" -i "input_raspicam.so"
+    ExecStart=/usr/local/bin/mjpg_streamer -o "output_http.so -w /usr/local/share/mjpg-streamer/www -l 127.0.0.1 -n" -i "input_raspicam.so"
     Restart=always
 
 [Install]

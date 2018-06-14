@@ -7,11 +7,6 @@
     group: staff
     mode: 0744
 
-- lineinfile:
-    dest: /etc/rc.local
-    line: "/usr/local/sbin/power-button &"
-    state: absent
-
 - name: Copy power-button service
   copy:
     src: power-button.service

@@ -11,6 +11,8 @@
     - htop
     - man-db
     - picocom
+    - python3-pip
+    - libglib2.0-dev
 
 - name: Install power button monitor
   include_tasks: power.yml

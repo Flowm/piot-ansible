@@ -27,8 +27,9 @@
 - name: Install python requirements
   pip:
     requirements: /opt/air-quality/air-pi/connector/requirements.txt
-    virtualenv: /opt/air-quality/air-pi/connector
-    virtualenv_command: /usr/bin/python3 -m venv
+    executable: pip3
+    #virtualenv: /opt/air-quality/air-pi/connector
+    #virtualenv_command: /usr/bin/python3 -m venv
 
 - name: Run setup script
   command: /opt/air-quality/air-pi/connector/setup.sh

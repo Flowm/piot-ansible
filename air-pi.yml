@@ -8,18 +8,13 @@
 ---
 - hosts: all
   become: true
-  vars:
-    rpi_wifi:
-      - ssid: "foobar"
-        psk: "d9c76bfe928e3425aac056ad1d4bf3d17d5a67dd72c419b8786e1d7ebb1767b4"
-        id_str: "example"
-        priority: 0
   roles:
     - role: rpi
     - role: nginx-proxy
-    - role: homeassistant
     - role: influxdb
     - role: grafana
+    - role: air-pi
+    #- role: homeassistant
     #- role: nodered
     #- role: ser2mqtt
     #- role: ble2mqtt

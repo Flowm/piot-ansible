@@ -1,0 +1,34 @@
+---
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - libbluetooth-dev
+    - libglib2.0-dev
+    - python3-dev
+    - python3-pip
+    - python3-venv
+
+- name: Install virtualenv
+  pip:
+    name: virtualenv
+    state: latest
+    executable: pip3
+
+- name: Deploy repository
+  git:
+    repo: "https://github.com/Flowm/air-quality"
+    dest: /opt/air-quality
+    version: pyserial
+
+- name: Install python requirements
+  pip:
+    requirements: /opt/air-quality/air-pi/connector/requirements.txt
+    virtualenv: /opt/air-quality/air-pi/connector
+    virtualenv_command: /usr/bin/python3 -m venv
+
+- name: Run setup script
+  command: /opt/air-quality/air-pi/connector/setup.sh

@@ -1,4 +1,5 @@
 ---
-rpi_wifi_client: false
-rpi_serial: false
+rpi_hostname: true
 rpi_power: true
+rpi_serial: false
+rpi_wifi: []

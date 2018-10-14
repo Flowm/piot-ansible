@@ -40,7 +40,7 @@
   lineinfile:
     dest: /etc/grafana/grafana.ini
     regexp: "^;?root_url"
-    line: "root_url = %(protocol)s://%(domain)s:/{grafana_base_url}"
+    line: "root_url = %(protocol)s://%(domain)s:/{{ grafana_base_url }}"
   when: grafana_base_url is defined
   notify:
     - Restart grafana

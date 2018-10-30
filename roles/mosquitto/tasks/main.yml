@@ -1,13 +1,14 @@
 ---
 - name: Install Mosquitto
   apt:
-    name: "{{ item }}"
+    name: "{{ packages }}"
     state: present
     update_cache: yes
     cache_valid_time: 3600
-  with_items:
-    - mosquitto
-    - mosquitto-clients
+  vars:
+    packages:
+      - mosquitto
+      - mosquitto-clients
   notify: Restart Mosquitto
 
 - name: Copy Mosquitto config

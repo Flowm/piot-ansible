@@ -10,10 +10,11 @@
 
 - name: Install influxdb and telegraf
   apt:
-    name: "{{ item }}"
+    name: "{{ packages }}"
     state: present
-  with_items:
-    - influxdb
-    - telegraf
+  vars:
+    packages:
+      - influxdb
+      - telegraf
   notify:
     - Restart influxdb

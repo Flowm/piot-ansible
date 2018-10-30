@@ -29,10 +29,11 @@
 
 - name: Install grafana package
   apt:
-    name: "{{ item }}"
+    name: "{{ packages }}"
     state: present
-  with_items:
-    - grafana
+  vars:
+    packages:
+      - grafana
   notify:
     - Restart grafana
 

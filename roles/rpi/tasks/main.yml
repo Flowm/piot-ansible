@@ -1,18 +1,19 @@
 ---
 - name: Install rpi packages
   apt:
-    name: "{{ item }}"
+    name: "{{ packages }}"
     state: present
     update_cache: yes
     cache_valid_time: 3600
-  with_items:
-    - build-essential
-    - git
-    - htop
-    - man-db
-    - picocom
-    - python3-pip
-    - libglib2.0-dev
+  vars:
+    packages:
+      - build-essential
+      - git
+      - htop
+      - man-db
+      - picocom
+      - python3-pip
+      - libglib2.0-dev
 
 - name: Set hostname
   include_tasks: hostname.yml

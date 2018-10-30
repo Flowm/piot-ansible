@@ -1,12 +1,13 @@
 ---
 - name: Install nginx
   apt:
-    name: "{{ item }}"
+    name: "{{ packages }}"
     state: present
     update_cache: yes
     cache_valid_time: 36000
-  with_items:
-    - nginx
+  vars:
+    packages:
+      - nginx
 
 
 - name: Copy nginx.conf

@@ -1,0 +1,76 @@
+---
+- name: Create group
+  group:
+    name: "{{ fwdc_local_user }}"
+    state: present
+
+- name: Create user
+  user:
+    name: "{{ fwdc_local_user }}"
+    group: "{{ fwdc_local_user }}"
+    shell: "/bin/false"
+
+- name: Create ssh dir
+  file:
+    path: "{{ fwdc_local_keydir }}"
+    state: directory
+    owner: "{{ fwdc_local_user }}"
+    group: "{{ fwdc_local_user }}"
+    mode: 0700
+
+- name: Create keypair
+  shell: "ssh-keygen -t ed25519 -f {{ fwdc_local_keydir }}/id_ed25519 -C '{{ fwdc_local_user }}@{{ ansible_hostname }}' -N ''"
+  args:
+    creates: "{{ fwdc_local_keydir }}/id_ed25519"
+
+- name: Check keypair permission
+  file:
+    path: "{{ fwdc_local_keydir }}/{{ item }}"
+    state: file
+    owner: "{{ fwdc_local_user }}"
+    group: "{{ fwdc_local_user }}"
+    mode: 0700
+  with_items:
+    - id_ed25519
+    - id_ed25519.pub
+
+- name: Read public key
+  command: "cat {{ fwdc_local_keydir }}/id_ed25519.pub"
+  register: pubkey
+  changed_when: false
+- name: Print public key
+  debug:
+    msg: "Public key: {{ pubkey.stdout_lines | first }}"
+
+- name: Get ssh host key for remote
+  shell: "ssh-keyscan -p {{ fwdc_remote_port }} {{ fwdc_remote_ip }} | sort"
+  register: fwdc_remote_hostkey
+  changed_when: false
+  when: fwdc_remote_get_hostkey
+
+- name: Import ssh host key for remote
+  blockinfile:
+    dest: "{{ fwdc_local_keydir }}/known_hosts"
+    content: "{{ fwdc_remote_hostkey.stdout }}"
+    create: yes
+    owner: "{{ fwdc_local_user }}"
+    group: "{{ fwdc_local_user }}"
+  when: fwdc_remote_get_hostkey
+
+# Cleaner ssh host key gathering, but always fails without msg and rc = 1
+#- name: Add ssh host key for remote
+#  known_hosts:
+#    path: "{{ fwdc_local_keydir }}/known_hosts"
+#    name: "[{{ fwdc_remote_ip }}]:{{ fwdc_remote_ip }}"
+#    key: "{{ lookup('pipe', 'ssh-keyscan -t ed25519 -p {{ fwdc_remote_port }} {{ fwdc_remote_ip }}') }}"
+
+
+- name: Copy autossh service
+  template:
+    src: "autossh.service.j2"
+    dest: "/etc/systemd/system/autossh.service"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify:
+    - Enable autossh service

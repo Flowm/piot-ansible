@@ -1,0 +1,15 @@
+[Unit]
+  Description=AutoSSH service
+  After=network-online.target
+
+[Service]
+  User={{ fwdc_local_user }}
+  ExecStart=/usr/bin/ssh -N -T -q -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes {{ fwdc_remote_ip }} -l {{ fwdc_remote_user }} -p {{ fwdc_remote_port }} -i {{ fwdc_local_keypath }}
+  {%- for item in fwdc_fwd_remote %} -R {{ item.remote_ip }}:{{ item.remote_port }}:{{ item.local_ip }}:{{ item.local_port }}{% endfor %}
+  {%- for item in fwdc_fwd_local %} -L {{ item.local_ip }}:{{ item.local_port }}:{{ item.remote_ip }}:{{ item.remote_port }}{% endfor %}
+
+  Restart=always
+  RestartSec=30
+
+[Install]
+  WantedBy=multi-user.target

@@ -1,0 +1,18 @@
+---
+fwdc_local_user: "fwdc"
+fwdc_local_keydir: "/home/{{ fwdc_local_user }}/.ssh"
+fwdc_local_keypath: "{{ fwdc_local_keydir }}/id_ed25519"
+fwdc_remote_ip: "frcy.org"
+fwdc_remote_user: "fwd"
+fwdc_remote_port: 40100
+fwdc_remote_get_hostkey: yes
+fwdc_fwd_remote: []
+#  - local_port: 22
+#    local_ip: localhost
+#    remote_port: 40109
+#    remote_ip: 0.0.0.0
+fwdc_fwd_local: []
+#  - local_port: 48086
+#    local_ip: localhost
+#    remote_port: 8086
+#    remote_ip: localhost

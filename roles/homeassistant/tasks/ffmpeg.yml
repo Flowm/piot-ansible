@@ -7,7 +7,7 @@
 
 - name: Download static ffmpeg build
   unarchive:
-    src: "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-armhf-32bit-static.tar.xz"
+    src: "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-armhf-static.tar.xz"
     dest: "/opt/ffmpeg/"
     remote_src: True
     creates: "/opt/ffmpeg/ffmpeg-*"

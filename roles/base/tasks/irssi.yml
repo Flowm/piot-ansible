@@ -1,0 +1,14 @@
+- name: Install irssi
+  package:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - irssi
+
+- name: Copy irssi config
+  synchronize:
+    src: "{{ base_irssi_local }}/"
+    dest: "/home/{{ base_user.name }}/.irssi"
+    mode: push
+    recursive: yes

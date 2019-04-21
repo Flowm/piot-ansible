@@ -1,0 +1,52 @@
+---
+- name: Create group
+  group:
+    name: "{{ base_user.name }}"
+    state: present
+
+- name: Create user
+  user:
+    name: "{{ base_user.name }}"
+    group: "{{ base_user.name }}"
+    shell: "/usr/bin/zsh"
+
+- name: Add user groups
+  user:
+    name: "{{ base_user.name }}"
+    append: yes
+    groups: "{{ item }}"
+  with_items:
+    - "{{ base_user.groups | default('sudo') }}"
+  when: ansible_pkg_mgr == 'apt'
+
+- name: Add authorized keys from string
+  authorized_key:
+    user: "{{ base_user.name }}"
+    key: "{{ item }}"
+  when: base_user.ssh_keys is defined
+  with_items:
+    - "{{ base_user.ssh_keys }}"
+
+- name: Add authorized keys from github
+  authorized_key:
+    user: "{{ base_user.name }}"
+    key: "https://github.com/{{ item }}.keys"
+  when: base_user.ssh_keys_gh is defined
+  with_items:
+    - "{{ base_user.ssh_keys_gh }}"
+
+- name: Add authorized keys from folder
+  authorized_key:
+    user: "{{ base_user.name }}"
+    key: "{{ lookup('file', item) }}"
+  when: base_user.ssh_keys_path is defined
+  with_fileglob:
+    - "{{ base_user.ssh_keys_path }}/*"
+
+- name: Add personal configuration
+  include_tasks: myconf.yml
+  when: base_user.myconf | default(false) | bool
+
+- name: Install irssi
+  include_tasks: irssi.yml
+  when: base_user.irssi | default(false) | bool

@@ -1,0 +1,120 @@
+---
+- name: Update package cache and autoremove packages
+  apt:
+    update_cache: yes
+    cache_valid_time: 36000
+    autoremove: true
+  when: ansible_pkg_mgr == 'apt'
+
+- name: Remove puppet and chef
+  package:
+    name: "{{ packages }}"
+    state: absent
+  vars:
+    packages:
+      - puppet
+      - chef
+
+- name: Install aptitude for ansible
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - aptitude
+  when: ansible_pkg_mgr == 'apt'
+
+- name: Install selinux for ansible
+  dnf:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - libselinux-python
+  when: ansible_pkg_mgr == 'dnf'
+
+- name: Install minimal packages
+  package:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - git
+      - vim
+
+- name: Install base packages
+  package:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - acl
+      - bash-completion
+      - curl
+      - fail2ban
+      - git
+      - htop
+      - lsof
+      - man-db
+      - moreutils
+      - mosh
+      - neofetch
+      - passwdqc
+      - python
+      - python3
+      - rdfind
+      - socat
+      - tcpdump
+      - telnet
+      - tmux
+      - unp
+      - unzip
+      - wget
+      - zsh
+      - zstd
+  when: base_pkgs
+
+- name: Install base packages Debian
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - bind9-host
+      - build-essential
+      - python-dev
+      - python3-dev
+      - vim-nox
+      - picocom
+  when: base_pkgs and ansible_pkg_mgr == 'apt'
+
+- name: Install base packages Fedora
+  dnf:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - automake
+      - gcc
+      - gcc-c++
+      - kernel-devel
+      - make
+      - python2-devel
+      - python3-devel
+      - redhat-rpm-config
+      - sqlite
+      - vim-enhanced
+  when: base_pkgs and ansible_pkg_mgr == 'dnf'
+
+- name: Create locales
+  locale_gen:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - en_US.UTF-8
+    - de_DE.UTF-8
+  when: ansible_pkg_mgr == 'apt'
+
+- name: Set timezone to Europe/Berlin
+  timezone:
+    name: Europe/Berlin

@@ -1,0 +1,29 @@
+- name: Disable empty password login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PermitEmptyPasswords"
+    line: "PermitEmptyPasswords no"
+  notify: Restart ssh
+
+- name: Disable root login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PermitRootLogin"
+    line: "PermitRootLogin no"
+  notify: Restart ssh
+
+- name: Disable password login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PasswordAuthentication"
+    line: "PasswordAuthentication no"
+  notify: Restart ssh
+
+- name: Enable password login for local subnet
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    block: |
+      Match Address 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+          PasswordAuthentication yes
+  notify: Restart ssh
+  when: base_sshd_localpw

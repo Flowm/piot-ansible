@@ -1,0 +1,14 @@
+---
+- name: Install packages
+  include_tasks: pkg.yml
+
+- name: Add users
+  include_tasks: user.yml
+  with_items:
+    - "{{ base_users | default([]) }}"
+  loop_control:
+    loop_var: base_user
+
+- name: Secure ssh server config
+  include_tasks: sshd.yml
+  when: base_sshd

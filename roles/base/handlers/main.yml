@@ -1,0 +1,12 @@
+---
+- name: Restart ssh
+  service:
+    name: ssh
+    state: restarted
+  when: ansible_pkg_mgr == 'apt'
+
+- name: Restart ssh
+  service:
+    name: sshd
+    state: restarted
+  when: ansible_pkg_mgr == 'dnf'

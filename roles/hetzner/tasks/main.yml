@@ -1,0 +1,22 @@
+---
+- name: Check current apt mirrors
+  shell: "grep HETZNER /etc/apt/sources.list"
+  register: sources_out
+  failed_when: false
+  changed_when: false
+
+- name: Add apt mirrors
+  shell: "echo -n '# HETZNER\ndeb http://mirror.hetzner.de/ubuntu/packages {{ ansible_distribution_release }} main restricted universe multiverse\ndeb http://mirror.hetzner.de/ubuntu/packages {{ ansible_distribution_release }}-backports main restricted universe multiverse\ndeb http://mirror.hetzner.de/ubuntu/packages {{ ansible_distribution_release }}-updates main restricted universe multiverse\ndeb http://mirror.hetzner.de/ubuntu/security {{ ansible_distribution_release }}-security main restricted universe multiverse\n\n' | cat - /etc/apt/sources.list > /etc/apt/sources.list.new && mv /etc/apt/sources.list.new /etc/apt/sources.list"
+  when: ansible_distribution == "Ubuntu" and sources_out.rc != 0
+
+- apt_repository:
+    repo: "deb http://mirror.hetzner.de/debian/packages {{ ansible_distribution_release }} main contrib non-free"
+    state: present
+    filename: 'hetzner'
+  when: ansible_distribution == "Debian" and sources_out.rc != 0
+
+- apt_repository:
+    repo: "deb http://mirror.hetzner.de/debian/security {{ ansible_distribution_release }}/updates main contrib non-free"
+    state: present
+    filename: 'hetzner'
+  when: ansible_distribution == "Debian" and sources_out.rc != 0

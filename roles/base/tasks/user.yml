@@ -9,6 +9,7 @@
     name: "{{ base_user.name }}"
     group: "{{ base_user.name }}"
     shell: "/usr/bin/zsh"
+  register: newuser
 
 - name: Add user groups
   user:
@@ -18,6 +19,12 @@
   with_items:
     - "{{ base_user.groups | default('sudo') }}"
   when: ansible_pkg_mgr == 'apt'
+
+- name: Generate random password for new sudo users
+  user:
+    name: "{{ base_user.name }}"
+    password: "{{ lookup('password', '.cred/{{ inventory_hostname }}/{{ base_user.name}}/pw.txt') | password_hash('sha512') }}"
+  when: newuser.changed and 'sudo' in (base_user.groups | default('sudo'))
 
 - name: Add authorized keys from string
   authorized_key:

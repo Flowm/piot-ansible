@@ -1,4 +1,5 @@
 ---
+base_hostname: false
 base_pkgs: true
 
 base_users:

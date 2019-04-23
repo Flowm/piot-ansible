@@ -1,4 +1,8 @@
 ---
+- name: Set hostname
+  include_tasks: hostname.yml
+  when: base_hostname | default(false) | bool
+
 - name: Install packages
   include_tasks: pkg.yml
 

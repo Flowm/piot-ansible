@@ -15,10 +15,6 @@
       - python3-pip
       - libglib2.0-dev
 
-- name: Set hostname
-  include_tasks: hostname.yml
-  when: rpi_hostname | default(false) | bool
-
 - name: Install power button monitor
   include_tasks: power.yml
   when: rpi_power | default(false) | bool

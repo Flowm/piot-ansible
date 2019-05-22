@@ -5,7 +5,8 @@ base_pkgs: true
 base_users:
   - name: "vagrant"
     #ssh_keys: []
-    ssh_keys_gh: ["Flowm"]
+    #ssh_keys_gh: []
+    #ssh_keys_gitlab: []
     #ssh_keys_path: ""
     myconf: true
 

@@ -36,7 +36,7 @@
     key: "{{ item }}"
   when: base_user.ssh_keys is defined
   with_items:
-    - "{{ base_user.ssh_keys }}"
+    - "{{ base_user.ssh_keys | default([]) }}"
 
 - name: Add authorized keys from github
   authorized_key:
@@ -44,7 +44,15 @@
     key: "https://github.com/{{ item }}.keys"
   when: base_user.ssh_keys_gh is defined
   with_items:
-    - "{{ base_user.ssh_keys_gh }}"
+    - "{{ base_user.ssh_keys_gh | default([]) }}"
+
+- name: Add authorized keys from gitlab
+  authorized_key:
+    user: "{{ base_user.name }}"
+    key: "https://{{ item }}.keys"
+  when: base_user.ssh_keys_gitlab is defined
+  with_items:
+    - "{{ base_user.ssh_keys_gitlab | default([]) }}"
 
 - name: Add authorized keys from folder
   authorized_key:

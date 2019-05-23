@@ -42,69 +42,69 @@
       - git
       - vim
 
-- name: Install base packages
-  package:
-    name: "{{ packages }}"
-    state: present
-  vars:
-    packages:
-      - acl
-      - bash-completion
-      - curl
-      - fail2ban
-      - git
-      - htop
-      - lsof
-      - man-db
-      - moreutils
-      - mosh
-      - neofetch
-      - passwdqc
-      - python
-      - python3
-      - rdfind
-      - socat
-      - tcpdump
-      - telnet
-      - tmux
-      - unp
-      - unzip
-      - wget
-      - zsh
-      - zstd
-  when: base_pkgs
+- block:
+  - name: Install base packages
+    package:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+        - acl
+        - bash-completion
+        - curl
+        - fail2ban
+        - git
+        - htop
+        - lsof
+        - man-db
+        - moreutils
+        - mosh
+        - passwdqc
+        - python
+        - python3
+        - rdfind
+        - socat
+        - tcpdump
+        - telnet
+        - tmux
+        - unp
+        - unzip
+        - wget
+        - zsh
+        - zstd
 
-- name: Install base packages Debian
-  apt:
-    name: "{{ packages }}"
-    state: present
-  vars:
-    packages:
-      - bind9-host
-      - build-essential
-      - python-dev
-      - python3-dev
-      - vim-nox
-      - picocom
-  when: base_pkgs and ansible_pkg_mgr == 'apt'
+  - name: Install base packages Debian
+    apt:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+        - bind9-host
+        - build-essential
+        - python-dev
+        - python3-dev
+        - vim-nox
+        - picocom
+    when: ansible_pkg_mgr == 'apt'
 
-- name: Install base packages Fedora
-  dnf:
-    name: "{{ packages }}"
-    state: present
-  vars:
-    packages:
-      - automake
-      - gcc
-      - gcc-c++
-      - kernel-devel
-      - make
-      - python2-devel
-      - python3-devel
-      - redhat-rpm-config
-      - sqlite
-      - vim-enhanced
-  when: base_pkgs and ansible_pkg_mgr == 'dnf'
+  - name: Install base packages Fedora
+    dnf:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+        - automake
+        - gcc
+        - gcc-c++
+        - kernel-devel
+        - make
+        - python2-devel
+        - python3-devel
+        - redhat-rpm-config
+        - sqlite
+        - vim-enhanced
+    when: ansible_pkg_mgr == 'dnf'
+  when: base_pkgs|bool
 
 - name: Create locales
   locale_gen:

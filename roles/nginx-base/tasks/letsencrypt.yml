@@ -1,0 +1,99 @@
+---
+- name: Create account key
+  command: "openssl genrsa -out /etc/ssl/private/le-account.key 4096"
+  args:
+    creates: "/etc/ssl/private/le-account.key"
+
+- name: Create key for domain
+  command: "openssl genrsa -out /etc/ssl/private/{{ domain }}.key 4096"
+  args:
+    creates: "/etc/ssl/private/{{ domain }}.key"
+
+- name: Create csr for key
+  command: "openssl req -new -sha256 -key /etc/ssl/private/{{ domain }}.key -out /etc/ssl/private/{{ domain }}.csr -subj '/C={{nginx_le_csr_country_code}}/ST={{nginx_le_csr_state}}/L={{nginx_le_csr_city}}/O={{nginx_le_csr_organization}}/CN={{domain}}'"
+  args:
+    creates: "/etc/ssl/private/{{ domain }}.csr"
+
+- name: Create temporary self signed crt to start nginx
+  command: "openssl x509 -req -days 365 -in /etc/ssl/private/{{ domain }}.csr -signkey /etc/ssl/private/{{ domain }}.key -out /etc/ssl/private/{{ domain }}.crt"
+  args:
+    creates: "/etc/ssl/private/{{ domain }}.crt"
+
+- name: Check if certificate already exists (symlinks an existing crt)
+  stat:
+    path: "/etc/ssl/private/{{ domain }}.crt"
+  register: crt_file
+  changed_when: crt_file.stat.islnk is defined and not crt_file.stat.islnk
+
+- debug:
+    msg: "Certificate {{ crt_file.stat.lnk_target }} already exsits"
+  when: not crt_file.changed
+
+- name: Check if certificate is valid for more than one month
+  command: "openssl x509 -checkend 2592000 -noout -in /etc/ssl/private/{{ domain }}.crt"
+  register: crt_check
+  changed_when: crt_check.rc != 0
+  failed_when: crt_check.rc > 1
+
+- debug:
+    msg: "Certificate is still valid"
+  when: not crt_check.changed
+
+- meta: flush_handlers
+
+- name: Letsencrypt challenge
+  block:
+    - set_fact: ledate="{{lookup('pipe','date +%Y%m%d%H%M%S')}}"
+    - set_fact: new_keyname="{{ domain }}-{{ ledate }}"
+    - name: Get letsencrypt challenge
+      acme_certificate:
+        account_email: "{{ nginx_le_account_email }}"
+        account_key: "/etc/ssl/private/le-account.key"
+        acme_directory: "https://acme-v01.api.letsencrypt.org/directory"
+        csr: "/etc/ssl/private/{{ domain }}.csr"
+        dest: "/etc/ssl/private/{{ new_keyname }}.crt"
+      register: le_challenge
+    - name: Create letsencrypt dir
+      file:
+        path: "/var/www/letsencrypt/.well-known/acme-challenge/"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: 0755
+    - name: Place challenge in webdir to fulfill
+      copy:
+        dest: "/var/www/letsencrypt/{{ item.value['http-01']['resource'] }}"
+        content: "{{ item.value['http-01']['resource_value'] }}"
+      with_dict: "{{ le_challenge['challenge_data'] | default({}) }}"
+    - name: Verify challenge and retreive cert
+      acme_certificate:
+        account_email: "{{ nginx_le_account_email }}"
+        account_key: "/etc/ssl/private/le-account.key"
+        acme_directory: "https://acme-v01.api.letsencrypt.org/directory"
+        csr: "/etc/ssl/private/{{ domain }}.csr"
+        dest: "/etc/ssl/private/{{ new_keyname }}.crt"
+        data: "{{ le_challenge }}"
+    - name: Download letsencrypt chain
+      get_url:
+        url: "https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem"
+        dest: "/etc/ssl/le-chain.pem"
+    - name: Copy chain
+      command: "cat /etc/ssl/le-chain.pem"
+      register: letsencrypt_chain
+      changed_when: false
+    - name: Append chain
+      blockinfile:
+        dest: "/etc/ssl/private/{{ new_keyname }}.crt"
+        insertafter: "-----END CERTIFICATE-----"
+        content: "{{ letsencrypt_chain.stdout }}"
+    - name: Remove self signed certificate
+      file:
+        dest: "/etc/ssl/private/{{ domain }}.crt"
+        state: absent
+    - name: Replace self signed certificate with letsencrypt cert
+      file:
+        src: "/etc/ssl/private/{{ new_keyname }}.crt"
+        dest: "/etc/ssl/private/{{ domain }}.crt"
+        state: link
+      notify: Restart nginx
+  when: crt_file.changed or crt_check.changed

@@ -1,0 +1,7 @@
+---
+nginx_le_domains: []
+nginx_le_account_email: ""
+nginx_le_csr_country_code: DE
+nginx_le_csr_state: Bavaria
+nginx_le_csr_city: Munich
+nginx_le_csr_organization: private

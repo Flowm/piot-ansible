@@ -1,0 +1,74 @@
+---
+- name: Install nginx
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 36000
+  vars:
+    packages:
+      - nginx
+      - ssl-cert
+      - apache2-utils
+
+- name: Copy nginx.conf
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    mode: 0640
+  notify: Restart nginx
+
+- name: Copy config snippets
+  copy:
+    src: "{{ item }}"
+    dest: /etc/nginx/snippets/
+    mode: 0644
+  with_fileglob:
+    - snippets/*
+  notify: Restart nginx
+
+- name: Copy default sites
+  copy:
+    src: "{{ item }}"
+    dest: /etc/nginx/sites-available/
+    mode: 0644
+  with_fileglob:
+    - sites-available/*
+  notify: Restart nginx
+
+- name: Enable default sites
+  file:
+    src: "/etc/nginx/sites-available/{{ item | basename }}"
+    dest: "/etc/nginx/sites-enabled/{{ item | basename }}"
+    state: link
+  with_fileglob:
+    - sites-available/*
+  notify: Restart nginx
+
+- name: Disable default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart nginx
+
+- name: Remove default webdir
+  file:
+    path: /var/www/html
+    state: absent
+
+- name: Create dh params
+  command: "openssl dhparam -out /etc/ssl/dhparam.pem 2048"
+  args:
+    creates: "/etc/ssl/dhparam.pem"
+
+- name: Enable nginx service
+  service:
+    name: nginx
+    enabled: yes
+
+- name: letsencrypt
+  include_tasks: letsencrypt.yml
+  with_items:
+    - "{{ nginx_le_domains | default([]) }}"
+  loop_control:
+    loop_var: domain

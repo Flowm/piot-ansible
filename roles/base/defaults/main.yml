@@ -8,7 +8,8 @@ base_users:
     #ssh_keys_gh: []
     #ssh_keys_gitlab: []
     #ssh_keys_path: ""
-    myconf: true
+    #myconf: false
+base_user_groups: ['sudo']
 
 base_myconf_local: "/veldt/vmdata/base/.myconf"
 base_myconf_remote: "/home/{{ base_user.name }}/.myconf"

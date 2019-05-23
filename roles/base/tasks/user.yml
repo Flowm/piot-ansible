@@ -21,7 +21,7 @@
     append: yes
     groups: "{{ item }}"
   with_items:
-    - "{{ base_user.groups | default('sudo') }}"
+    - "{{ base_user.groups | default(base_user_groups) }}"
   when: ansible_pkg_mgr == 'apt'
 
 - name: Generate random password for new sudo users

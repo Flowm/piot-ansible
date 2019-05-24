@@ -1,0 +1,73 @@
+---
+- name: Install prerequisites
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - apt-transport-https
+      - dirmngr
+
+- name: Import the docker signing key
+  apt_key:
+    id: 58118E89F3A912897C070ADBF76221572C52609D
+    keyserver: p80.pool.sks-keyservers.net
+
+- name: Add docker repository
+  apt_repository:
+    repo: "deb https://apt.dockerproject.org/repo {{ ansible_distribution | lower }}-{{ ansible_lsb.codename }} main"
+    state: present
+  register: docker_repo
+
+- name: Update package cache
+  apt:
+    update_cache: yes
+  when: docker_repo.changed
+
+- name: Install docker
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - docker-engine
+
+- name: Install pip for dockerpy
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - python-pip
+
+- name: Install latest dockerpy version
+  pip:
+    name: docker
+    state: latest
+
+- name: Install latest ansible version
+  pip:
+    name: ansible
+    state: latest
+
+- name: Add vagrant to docker group
+  user:
+    name: "vagrant"
+    groups: "docker"
+    append: yes
+
+- name: Enable docker
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Start containers
+  docker_container:
+    name: "{{ item.key }}"
+    image: "{{ item.value.image }}"
+    ports: "{{ item.value.ports }}"
+    state: started
+    restart_policy: always
+    detach: yes
+  with_dict: "{{ docker_containers }}"

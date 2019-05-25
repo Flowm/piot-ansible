@@ -15,4 +15,4 @@
 
 - name: Secure ssh server config
   include_tasks: sshd.yml
-  when: base_sshd
+  when: base_sshd | default(true) | bool

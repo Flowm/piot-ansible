@@ -46,7 +46,7 @@
   shell: "ssh-keyscan -p {{ fwdc_remote_port }} {{ fwdc_remote_ip }} | sort"
   register: fwdc_remote_hostkey
   changed_when: false
-  when: fwdc_remote_get_hostkey
+  when: fwdc_remote_get_hostkey | bool
 
 - name: Import ssh host key for remote
   blockinfile:
@@ -55,7 +55,7 @@
     create: yes
     owner: "{{ fwdc_local_user }}"
     group: "{{ fwdc_local_user }}"
-  when: fwdc_remote_get_hostkey
+  when: fwdc_remote_get_hostkey | bool
 
 # Cleaner ssh host key gathering, but always fails without msg and rc = 1
 #- name: Add ssh host key for remote

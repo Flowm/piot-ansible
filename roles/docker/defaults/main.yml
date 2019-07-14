@@ -1,2 +1,4 @@
 ---
 docker_containers: {}
+docker_users:
+  - vagrant

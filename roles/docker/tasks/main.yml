@@ -50,11 +50,12 @@
     name: ansible
     state: latest
 
-- name: Add vagrant to docker group
+- name: Add users to docker group
   user:
-    name: "vagrant"
+    name: "{{ item }}"
     groups: "docker"
     append: yes
+  loop: "{{ docker_users }}"
 
 - name: Enable docker
   systemd:

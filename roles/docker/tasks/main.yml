@@ -33,7 +33,7 @@
       - docker-ce
       - docker-ce-cli
 
-- name: Install pip for dockerpy
+- name: Install pip
   apt:
     name: "{{ packages }}"
     state: present
@@ -41,10 +41,14 @@
     packages:
       - python-pip
 
-- name: Install latest dockerpy version
+- name: Install latest dockerpy and docker-compose
   pip:
-    name: docker
+    name: "{{ packages }}"
     state: latest
+  vars:
+    packages:
+      - docker
+      - docker-compose
 
 - name: Install latest ansible version
   pip:

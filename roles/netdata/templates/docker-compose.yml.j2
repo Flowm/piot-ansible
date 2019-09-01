@@ -4,6 +4,9 @@ services:
   netdata:
     image: netdata/netdata
     hostname: {{ netdata_fqdn }}
+    environment:
+      - PGID=999
+    restart: always
     ports:
       - 19999:19999
     cap_add:

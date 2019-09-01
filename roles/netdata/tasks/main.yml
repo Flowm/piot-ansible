@@ -1,0 +1,26 @@
+---
+- name: Create group
+  group:
+    name: "{{ netdata_user }}"
+    state: present
+
+- name: Create user
+  user:
+    name: "{{ netdata_user }}"
+    group: "{{ netdata_user }}"
+
+- name: Copy docker compose configuration
+  template:
+    src: "docker-compose.yml.j2"
+    dest: "/home/{{ netdata_user }}/docker-compose.yml"
+    owner: "{{ netdata_user }}"
+    group: "{{ netdata_user }}"
+    mode: 0644
+
+- name: Create and start services
+  docker_compose:
+    project_src: "/home/{{ netdata_user }}"
+  register: docker_compose_output
+
+- debug:
+    var: docker_compose_output

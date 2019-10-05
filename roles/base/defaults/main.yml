@@ -4,6 +4,7 @@ base_pkgs: true
 
 base_users:
   - name: "vagrant"
+    #password: ""
     #ssh_keys: []
     #ssh_keys_gh: []
     #ssh_keys_gitlab: []

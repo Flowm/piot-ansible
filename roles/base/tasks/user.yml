@@ -24,11 +24,17 @@
     - "{{ base_user.groups | default(base_user_groups) }}"
   when: ansible_pkg_mgr == 'apt'
 
+- name: Update user password when configured
+  user:
+    name: "{{ base_user.name }}"
+    password: "{{ base_user.password }}"
+  when: base_user.password is defined
+
 - name: Generate random password for new sudo users
   user:
     name: "{{ base_user.name }}"
-    password: "{{ lookup('password', '.cred/{{ inventory_hostname }}/{{ base_user.name}}/pw.txt') | password_hash('sha512') }}"
-  when: newuser.changed and 'sudo' in (base_user.groups | default('sudo'))
+    password: "{{ lookup('password', '.cred/{{ inventory_hostname }}/{{ base_user.name }}/pw.txt') | password_hash('sha512') }}"
+  when: base_user.password is not defined and newuser.changed and 'sudo' in (base_user.groups | default('sudo'))
 
 - name: Add authorized keys from string
   authorized_key:

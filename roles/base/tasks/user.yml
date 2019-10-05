@@ -63,8 +63,8 @@
     - "{{ base_user.ssh_keys_path }}/*"
 
 - name: Add personal configuration
-  include_tasks: myconf.yml
-  when: base_user.myconf | default(false) | bool
+  include_tasks: dotfiles.yml
+  when: base_user.dotfiles | default(false) | bool
 
 - name: Install irssi
   include_tasks: irssi.yml

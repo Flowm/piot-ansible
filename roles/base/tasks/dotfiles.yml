@@ -1,0 +1,28 @@
+---
+- name: Check if dotfiles folder exists
+  stat:
+    path: "{{ base_dotfiles_dir }}"
+  register: base_dotfiles_folder
+
+- block:
+  - name: Clone dotfiles
+    git:
+      repo: "{{ base_dotfiles_url }}"
+      version: master
+      dest: "{{ base_dotfiles_dir }}"
+
+  - name: Fix owner
+    file:
+      path: "{{ base_dotfiles_dir }}"
+      state: directory
+      recurse: yes
+      owner: "{{ base_user.name }}"
+      group: "{{ base_user.name }}"
+
+  - name: Install dotfiles
+    shell: "bash {{ base_dotfiles_dir }}/bin/myc -i"
+    args:
+      creates: "/home/{{ base_user.name }}/.oh-my-zsh"
+    become: yes
+    become_user: "{{ base_user.name }}"
+  when: not base_dotfiles_folder.stat.exists

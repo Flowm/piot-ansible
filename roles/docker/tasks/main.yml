@@ -41,6 +41,13 @@
     packages:
       - python-pip
 
+# Workaround for Debian Buster "ImportError: No module named ssl_match_hostname" issue
+# https://github.com/cisagov/ansible-role-docker/pull/10
+- name: Install python-backports.ssl-match-hostname (Debian Buster)
+  package:
+    name: python-backports.ssl-match-hostname
+  when: ansible_distribution == "Debian" and ansible_distribution_release == "buster"
+
 - name: Install latest dockerpy and docker-compose
   pip:
     name: "{{ packages }}"

@@ -4,10 +4,10 @@ services:
   netdata:
     image: netdata/netdata
     hostname: {{ netdata_fqdn }}
-    command: ["-W", "set", "global", "history", "3600"]
+    command: ["-W", "set", "global", "history", "86400"]
+    restart: unless-stopped
     environment:
       - PGID=999
-    restart: unless-stopped
     ports:
       - 19999:19999
     cap_add:

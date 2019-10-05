@@ -21,6 +21,3 @@
   docker_compose:
     project_src: "/home/{{ netdata_user }}"
   register: docker_compose_output
-
-- debug:
-    var: docker_compose_output

@@ -1,0 +1,28 @@
+---
+- name: Install prerequisites
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - apt-transport-https
+
+- name: Add packagecloud signing key
+  apt_key:
+    url: "https://packagecloud.io/github/git-lfs/gpgkey"
+    state: present
+
+- name: Ensure repository configuration
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+    filename: github_git-lfs
+    update_cache: yes
+  with_items:
+    - "deb https://packagecloud.io/github/git-lfs/{{ansible_distribution|lower}}/ {{ansible_distribution_release}} main"
+    - "deb-src https://packagecloud.io/github/git-lfs/{{ansible_distribution|lower}}/ {{ansible_distribution_release}} main"
+
+- name: Ensure git-lfs is installed
+  apt:
+    name: git-lfs
+    state: present

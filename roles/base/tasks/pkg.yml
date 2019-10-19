@@ -6,15 +6,6 @@
     autoremove: true
   when: ansible_pkg_mgr == 'apt'
 
-- name: Remove puppet and chef
-  package:
-    name: "{{ packages }}"
-    state: absent
-  vars:
-    packages:
-      - puppet
-      - chef
-
 - name: Install aptitude for ansible
   apt:
     name: "{{ packages }}"

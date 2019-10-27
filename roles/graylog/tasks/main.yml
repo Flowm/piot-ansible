@@ -1,25 +1,25 @@
 ---
 - name: Create group
   group:
-    name: "{{ greylog_user }}"
+    name: "{{ graylog_user }}"
     state: present
 
 - name: Create user
   user:
-    name: "{{ greylog_user }}"
-    group: "{{ greylog_user }}"
+    name: "{{ graylog_user }}"
+    group: "{{ graylog_user }}"
 
 - name: Copy docker compose configuration
   template:
     src: "docker-compose.yml.j2"
-    dest: "/home/{{ greylog_user }}/docker-compose.yml"
-    owner: "{{ greylog_user }}"
-    group: "{{ greylog_user }}"
+    dest: "/home/{{ graylog_user }}/docker-compose.yml"
+    owner: "{{ graylog_user }}"
+    group: "{{ graylog_user }}"
     mode: 0644
 
 - name: Create and start services
   docker_compose:
-    project_src: "/home/{{ greylog_user }}"
+    project_src: "/home/{{ graylog_user }}"
   register: docker_compose_output
 
 - debug:

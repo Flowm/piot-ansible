@@ -69,6 +69,16 @@
     append: yes
   loop: "{{ docker_users }}"
 
+- name: Configure Docker daemon options
+  template:
+    src: "daemon.json.j2"
+    dest: "/etc/docker/daemon.json"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  when: (docker_config | default([])) | length > 0
+  notify: Restart docker
+
 - name: Enable docker
   systemd:
     name: docker

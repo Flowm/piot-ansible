@@ -1,0 +1,5 @@
+{
+{% for entry in docker_config %}
+  "{{ entry.name }}": "{{ entry.value }}"
+{% endfor %}
+}

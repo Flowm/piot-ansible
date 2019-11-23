@@ -33,14 +33,6 @@
       - docker-ce
       - docker-ce-cli
 
-- name: Install pip
-  apt:
-    name: "{{ packages }}"
-    state: present
-  vars:
-    packages:
-      - python-pip
-
 # Workaround for Debian Buster "ImportError: No module named ssl_match_hostname" issue
 # https://github.com/cisagov/ansible-role-docker/pull/10
 - name: Install python-backports.ssl-match-hostname (Debian Buster)
@@ -52,15 +44,11 @@
   pip:
     name: "{{ packages }}"
     state: latest
+    executable: pip3
   vars:
     packages:
       - docker
       - docker-compose
-
-- name: Install latest ansible version
-  pip:
-    name: ansible
-    state: latest
 
 - name: Add users to docker group
   user:

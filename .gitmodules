@@ -1,3 +1,6 @@
 [submodule "roles/ansible-gitlab-runner"]
 	path = roles/gitlab-runner
 	url = https://github.com/riemers/ansible-gitlab-runner.git
+[submodule "roles/golang"]
+	path = roles/golang
+	url = git@github.com:fubarhouse/ansible-role-golang.git

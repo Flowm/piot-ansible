@@ -51,6 +51,7 @@
         - moreutils
         - mosh
         - passwdqc
+        - pwgen
         - python
         - python3
         - rdfind
@@ -74,6 +75,8 @@
         - bind9-host
         - build-essential
         - python-dev
+        - python-pip
+        - python-setuptools
         - python3-dev
         - python3-pip
         - python3-setuptools

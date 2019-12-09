@@ -4,3 +4,6 @@
 [submodule "roles/golang"]
 	path = roles/golang
 	url = git@github.com:fubarhouse/ansible-role-golang.git
+[submodule "roles/swap"]
+	path = roles/swap
+	url = git@github.com:geerlingguy/ansible-role-swap.git

@@ -42,6 +42,7 @@
       packages:
         - acl
         - bash-completion
+        - brotli
         - curl
         - fail2ban
         - git

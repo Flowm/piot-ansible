@@ -49,7 +49,7 @@
   vars:
     packages:
       - docker
-      - docker-compose==1.25.1rc1
+      - docker-compose
 
 - name: Add users to docker group
   user:

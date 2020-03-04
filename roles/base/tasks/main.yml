@@ -20,3 +20,7 @@
 - name: Enable unattended upgrades
   include_tasks: upgrade.yml
   when: base_upgrade | default(true) | bool
+
+- name: Setup time synchronization
+  include_tasks: timesync.yml
+  when: base_timesync != "none"

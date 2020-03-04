@@ -21,3 +21,5 @@ base_irssi_remote: "/home/{{ base_user }}/.irssi"
 
 base_sshd: true
 base_sshd_localpw: false
+
+base_timesync: "none"

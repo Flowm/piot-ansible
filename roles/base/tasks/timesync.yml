@@ -1,0 +1,19 @@
+---
+- name: Install ntp
+  package:
+    name: ntp
+    state: present
+  when: base_timesync == "ntp"
+
+- block:
+- name: Install chrony
+  package:
+    name: chrony
+    state: present
+  when: base_timesync == "chrony"
+
+- name: Configure aws timesource
+  lineinfile:
+    dest: "/etc/chrony/chrony.conf"
+    line: "server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4"
+  when: base_timesync == "chrony"

@@ -58,6 +58,7 @@
         - rdfind
         - rsync
         - socat
+        - sudo
         - tcpdump
         - telnet
         - tmux

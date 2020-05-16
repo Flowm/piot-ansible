@@ -15,10 +15,6 @@ base_user_groups: ['sudo']
 base_dotfiles_url: "https://github.com/Flowm/dotfiles.git"
 base_dotfiles_dir: "/home/{{ base_user.name }}/.myconf"
 
-base_irssi: false
-base_irssi_local: "/veldt/vmdata/base/.irssi"
-base_irssi_remote: "/home/{{ base_user }}/.irssi"
-
 base_sshd: true
 base_sshd_localpw: false
 base_sshd_fail2ban: false

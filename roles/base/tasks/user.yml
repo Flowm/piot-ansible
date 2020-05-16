@@ -71,7 +71,3 @@
 - name: Add personal configuration
   include_tasks: dotfiles.yml
   when: base_user.dotfiles | default(false) | bool
-
-- name: Install irssi
-  include_tasks: irssi.yml
-  when: base_user.irssi | default(false) | bool

@@ -8,7 +8,8 @@
 
 - name: Copy irssi config
   synchronize:
-    src: "{{ base_irssi_local }}/"
-    dest: "/home/{{ base_user.name }}/.irssi"
+    src: "{{ irssi_local }}/"
+    dest: "{{ irssi_remote }}"
     mode: push
     recursive: yes
+  when: irssi_user != ""

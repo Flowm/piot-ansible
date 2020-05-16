@@ -27,3 +27,9 @@
           PasswordAuthentication yes
   notify: Restart ssh
   when: base_sshd_localpw | default(false) | bool
+
+- name: Install fail2ban
+  package:
+    name: fail2ban
+    state: present
+  when: base_sshd_fail2ban | default(false) | bool

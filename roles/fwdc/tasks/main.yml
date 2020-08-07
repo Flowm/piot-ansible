@@ -52,6 +52,7 @@
   blockinfile:
     dest: "{{ fwdc_local_keydir }}/known_hosts"
     content: "{{ fwdc_remote_hostkey.stdout }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{ fwdc_service_name }}"
     create: yes
     owner: "{{ fwdc_local_user }}"
     group: "{{ fwdc_local_user }}"
@@ -65,12 +66,12 @@
 #    key: "{{ lookup('pipe', 'ssh-keyscan -t ed25519 -p {{ fwdc_remote_port }} {{ fwdc_remote_ip }}') }}"
 
 
-- name: Copy autossh service
+- name: Copy fwdc service
   template:
-    src: "autossh.service.j2"
-    dest: "/etc/systemd/system/autossh.service"
+    src: "fwdc.service.j2"
+    dest: "/etc/systemd/system/{{ fwdc_service_name }}.service"
     owner: "root"
     group: "root"
     mode: 0644
   notify:
-    - Enable autossh service
+    - Enable fwdc service

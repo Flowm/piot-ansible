@@ -1,5 +1,5 @@
 ---
-- name: Enable fwdc service
+- name: "Enable {{ fwdc_service_name }} service"
   systemd:
     name: "{{ fwdc_service_name }}"
     enabled: yes

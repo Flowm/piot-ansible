@@ -48,6 +48,7 @@
   authorized_key:
     user: "{{ base_user.name }}"
     key: "https://github.com/{{ item }}.keys"
+  ignore_errors: yes
   when: base_user.ssh_keys_gh is defined
   with_items:
     - "{{ base_user.ssh_keys_gh | default([]) }}"
@@ -56,6 +57,7 @@
   authorized_key:
     user: "{{ base_user.name }}"
     key: "https://{{ item }}.keys"
+  ignore_errors: yes
   when: base_user.ssh_keys_gitlab is defined
   with_items:
     - "{{ base_user.ssh_keys_gitlab | default([]) }}"

@@ -74,4 +74,4 @@
     group: "root"
     mode: 0644
   notify:
-    - Enable fwdc service
+    - Enable {{ fwdc_service_name }} service

@@ -52,7 +52,6 @@
         - mosh
         - passwdqc
         - pwgen
-        - python
         - python3
         - rdfind
         - rsync

@@ -3,7 +3,7 @@
 	url = https://github.com/riemers/ansible-gitlab-runner.git
 [submodule "roles/golang"]
 	path = roles/golang
-	url = git@github.com:fubarhouse/ansible-role-golang.git
+	url = https://github.com/fubarhouse/ansible-role-golang.git
 [submodule "roles/swap"]
 	path = roles/swap
-	url = git@github.com:geerlingguy/ansible-role-swap.git
+	url = https://github.com/geerlingguy/ansible-role-swap.git

@@ -40,7 +40,7 @@
 - name: Install python-backports.ssl-match-hostname (Debian Buster)
   package:
     name: python-backports.ssl-match-hostname
-  when: ansible_distribution == "Debian" and ansible_distribution_release == "buster"
+  when: ansible_distribution == "Debian" and ansible_distribution_release == "buster" and ansible_python_version is version('3', 'lt')
 
 - name: Install latest dockerpy and docker-compose
   pip:

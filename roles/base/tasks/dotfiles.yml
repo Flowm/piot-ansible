@@ -21,8 +21,6 @@
 
   - name: Install dotfiles
     shell: "bash {{ base_dotfiles_install_cmd }}"
-    #args:
-    #  creates: "/home/{{ base_user.name }}/.oh-my-zsh"
     become: yes
     become_user: "{{ base_user.name }}"
   when: not base_dotfiles_folder.stat.exists

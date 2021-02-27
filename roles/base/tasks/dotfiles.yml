@@ -20,9 +20,7 @@
       group: "{{ base_user.name }}"
 
   - name: Install dotfiles
-    shell: "bash {{ base_dotfiles_dir }}/bin/myc -i"
-    args:
-      creates: "/home/{{ base_user.name }}/.oh-my-zsh"
+    shell: "bash {{ base_dotfiles_install_cmd }}"
     become: yes
     become_user: "{{ base_user.name }}"
   when: not base_dotfiles_folder.stat.exists

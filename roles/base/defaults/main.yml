@@ -11,12 +11,12 @@ base_users:
     #ssh_keys_path: ""
     #dotfiles: false
 base_user_groups: ['sudo']
-
-base_dotfiles_url: "https://github.com/Flowm/dotfiles.git"
-base_dotfiles_dir: "/home/{{ base_user.name }}/.myconf"
-
 base_sshd: true
 base_sshd_localpw: false
 base_sshd_fail2ban: false
 
 base_timesync: "none"
+
+base_dotfiles_url: "{{ base_user.dotfiles_url }}"
+base_dotfiles_dir: "/home/{{ base_user.name }}/{{ base_user.dotfiles_dir }}"
+base_dotfiles_install_cmd: "/home/{{ base_user.name }}/{{ base_user.dotfiles_dir }}/{{ base_user.dotfiles_install_cmd }}"

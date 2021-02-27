@@ -72,4 +72,4 @@
 
 - name: Add personal configuration
   include_tasks: dotfiles.yml
-  when: base_user.dotfiles | default(false) | bool
+  when: base_user.dotfiles_url is defined

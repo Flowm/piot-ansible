@@ -47,6 +47,7 @@
         - git
         - htop
         - jq
+        - lm-sensors
         - locales
         - lsof
         - man-db
@@ -57,6 +58,7 @@
         - python3
         - rdfind
         - rsync
+        - smartmontools
         - socat
         - sudo
         - tcpdump

@@ -1,19 +1,30 @@
 ---
-- name: Install ntp
-  package:
-    name: ntp
-    state: present
+- name: Setup systemd-timesyncd
+  block:
+    - name: Start and enable systemd-timesyncd
+      service:
+        name: systemd-timesyncd.service
+        enabled: yes
+        state: started
+  when: base_timesync == "systemd-timesyncd"
+
+- name: Setup ntp
+  block:
+    - name: Install ntp
+      package:
+        name: ntp
+        state: present
   when: base_timesync == "ntp"
 
-- block:
-- name: Install chrony
-  package:
-    name: chrony
-    state: present
-  when: base_timesync == "chrony"
+- name: Setup chrony
+  block:
+    - name: Install chrony
+      package:
+        name: chrony
+        state: present
 
-- name: Configure aws timesource
-  lineinfile:
-    dest: "/etc/chrony/chrony.conf"
-    line: "server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4"
+    - name: Configure aws timesource
+      lineinfile:
+        dest: "/etc/chrony/chrony.conf"
+        line: "server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4"
   when: base_timesync == "chrony"

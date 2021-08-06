@@ -12,6 +12,7 @@
     - "{{ base_users | default([]) }}"
   loop_control:
     loop_var: base_user
+  when: system_type in base_user.system_types
 
 - name: Secure ssh server config
   include_tasks: sshd.yml

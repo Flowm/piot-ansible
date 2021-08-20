@@ -7,20 +7,22 @@
     packages:
       - apt-transport-https
 
-- name: Add packagecloud signing key
-  apt_key:
-    url: "https://packagecloud.io/github/git-lfs/gpgkey"
-    state: present
-
-- name: Ensure repository configuration
-  apt_repository:
-    repo: "{{ item }}"
-    state: present
-    filename: github_git-lfs
-    update_cache: yes
-  with_items:
-    - "deb https://packagecloud.io/github/git-lfs/{{ansible_distribution|lower}}/ {{ansible_distribution_release}} main"
-    - "deb-src https://packagecloud.io/github/git-lfs/{{ansible_distribution|lower}}/ {{ansible_distribution_release}} main"
+- block:
+  - name: Add packagecloud signing key
+    apt_key:
+      url: "https://packagecloud.io/github/git-lfs/gpgkey"
+      state: present
+  - name: Ensure repository configuration
+    apt_repository:
+      repo: "{{ item }}"
+      state: present
+      filename: github_git-lfs
+      update_cache: yes
+    with_items:
+      - "deb https://packagecloud.io/github/git-lfs/{{ansible_distribution|lower}}/ {{ansible_distribution_release}} main"
+      - "deb-src https://packagecloud.io/github/git-lfs/{{ansible_distribution|lower}}/ {{ansible_distribution_release}} main"
+  when: (ansible_distribution == "Debian" and ansible_distribution_major_version|int < 11) or
+        (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int < 21)
 
 - name: Ensure git-lfs is installed
   apt:

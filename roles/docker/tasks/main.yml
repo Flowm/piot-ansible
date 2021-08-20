@@ -10,21 +10,31 @@
       - python3-pip
       - software-properties-common
 
-- name: Import Docker GPG signing key
-  apt_key:
-    url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
-    state: present
+- block:
+  - name: Import Docker GPG signing key (old)
+    apt_key:
+      url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+      state: present
+  - name: Add docker repository
+    apt_repository:
+      repo: "deb https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release | lower }} stable"
+      state: present
+      update_cache: yes
+  when: (ansible_distribution == "Debian" and ansible_distribution_major_version|int < 11) or
+        (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int < 21)
 
-- name: Add docker repository
-  apt_repository:
-    repo: "deb https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release | lower }} stable"
-    state: present
-  register: docker_repo
-
-- name: Update package cache
-  apt:
-    update_cache: yes
-  when: docker_repo.changed
+- block:
+  - name: Import Docker GPG signing key
+    get_url:
+      url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+      dest: /usr/share/keyrings/docker-debian-packages.key
+  - name: Add docker repository
+    apt_repository:
+      repo: "deb [signed-by=/usr/share/keyrings/docker-debian-packages.key] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release | lower }} stable"
+      state: present
+      update_cache: yes
+  when: (ansible_distribution == "Debian" and ansible_distribution_major_version|int >= 11) or
+        (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 21)
 
 - name: Install docker
   apt:

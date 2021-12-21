@@ -53,6 +53,7 @@
         - man-db
         - moreutils
         - mosh
+        - ncdu
         - passwdqc
         - pwgen
         - python3

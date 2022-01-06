@@ -1,6 +1,5 @@
 ---
 docker_containers: {}
-docker_users:
-  - vagrant
+docker_users: []
 # docker_config:
 #   - { name: "data-root", value:"/var/lib/docker" }

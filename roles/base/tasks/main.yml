@@ -1,10 +1,11 @@
 ---
 - name: Set hostname
   include_tasks: hostname.yml
-  when: base_hostname | default(false) | bool
+  when: base_hostname | bool
 
 - name: Install packages
   include_tasks: pkg.yml
+  when: base_pkg | bool
 
 - name: Add users
   include_tasks: user.yml
@@ -16,11 +17,11 @@
 
 - name: Secure ssh server config
   include_tasks: sshd.yml
-  when: base_sshd | default(true) | bool
+  when: base_sshd | bool
 
 - name: Enable unattended upgrades
   include_tasks: upgrade.yml
-  when: base_upgrade | default(true) | bool
+  when: base_upgrade | bool
 
 - name: Setup time synchronization
   include_tasks: timesync.yml

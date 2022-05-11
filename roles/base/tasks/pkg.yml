@@ -103,7 +103,6 @@
         - sqlite
         - vim-enhanced
     when: ansible_pkg_mgr == 'dnf'
-  when: base_pkgs|bool
 
 - name: Create locales
   locale_gen:

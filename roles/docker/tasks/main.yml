@@ -80,7 +80,7 @@
   notify: Restart docker
 
 - name: Enable docker
-  systemd:
+  service:
     name: docker
     enabled: yes
     state: started

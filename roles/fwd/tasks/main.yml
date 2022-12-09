@@ -1,0 +1,9 @@
+---
+- name: Set ClientAliveInterval and ClientAliveCountMax for the fwdc user in sshd config
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    block: |
+      Match User fwdc
+          ClientAliveCountMax 4
+          ClientAliveInterval 15
+  notify: Restart ssh

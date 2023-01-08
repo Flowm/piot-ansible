@@ -1,5 +1,6 @@
 ---
 docker_containers: {}
 docker_users: []
+docker_legacy_compose: true
 # docker_config:
 #   - { name: "data-root", value:"/var/lib/docker" }

@@ -1,4 +1,8 @@
 ---
+- name: Update package cache
+  apt:
+    cache_valid_time: 36000
+
 - name: Install prerequisites
   apt:
     name: "{{ packages }}"

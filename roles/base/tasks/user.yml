@@ -4,25 +4,15 @@
     name: "{{ base_user.name }}"
     state: present
 
-- name: Create user
+- name: Create user {{ base_user.name }}
   user:
     name: "{{ base_user.name }}"
     group: "{{ base_user.name }}"
-  register: newuser
-
-- name: Set user shell
-  user:
-    name: "{{ base_user.name }}"
-    shell: "/usr/bin/zsh"
-
-- name: Add user groups
-  user:
-    name: "{{ base_user.name }}"
+    groups: "{{ base_user.groups | default(base_user_groups) }}"
     append: yes
-    groups: "{{ item }}"
-  with_items:
-    - "{{ base_user.groups | default(base_user_groups) }}"
-  when: ansible_pkg_mgr == 'apt'
+    shell: "/usr/bin/zsh"
+    expires: -1
+  register: newuser
 
 - name: Update user password when configured
   user:

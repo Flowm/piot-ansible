@@ -46,8 +46,10 @@
     state: present
   vars:
     packages:
+      - apparmor
       - docker-ce
       - docker-ce-cli
+      - docker-buildx-plugin
       - docker-compose-plugin
 
 - name: Install legacy docker compose

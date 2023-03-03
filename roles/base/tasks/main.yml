@@ -13,7 +13,17 @@
     - "{{ base_users | default([]) }}"
   loop_control:
     loop_var: base_user
+    label: "{{ base_user.name }}"
   when: (system_type is undefined) or (system_type in (base_user.system_types | default([])))
+
+- name: Disable users
+  include_tasks: user-disable.yml
+  with_items:
+    - "{{ base_users | default([]) }}"
+  loop_control:
+    loop_var: base_user
+    label: "{{ base_user.name }}"
+  when: base_user_disable | bool and (system_type is defined) and (system_type not in (base_user.system_types | default([]))) and (not base_user.keep | default(false))
 
 - name: Secure ssh server config
   include_tasks: sshd.yml

@@ -1,0 +1,7 @@
+---
+- name: Disable user {{ base_user.name }}
+  user:
+    name: "{{ base_user.name }}"
+    shell: "/sbin/nologin"
+    expires: 0
+    state: absent

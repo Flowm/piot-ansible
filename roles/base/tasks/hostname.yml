@@ -1,10 +1,11 @@
 ---
-- name: Set hostname
-  hostname:
-    name: "{{ inventory_hostname }}"
-  when: not inventory_hostname is match('(\d{1,3}\.){3}\d{1,3}')
+- block:
+  - name: Set hostname
+    hostname:
+      name: "{{ inventory_hostname }}"
 
-- name: Set hostname in /etc/hosts
-  lineinfile:
-    dest: "/etc/hosts"
-    line: "127.0.0.1\t{{ ansible_hostname }}"
+  - name: Set hostname in /etc/hosts
+    lineinfile:
+      dest: "/etc/hosts"
+      line: "127.0.0.1\t{{ inventory_hostname }}"
+  when: not inventory_hostname is match('(\d{1,3}\.){3}\d{1,3}')

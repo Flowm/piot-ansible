@@ -34,23 +34,14 @@
   with_items:
     - "{{ base_user.ssh_keys | default([]) }}"
 
-- name: Add authorized keys from github
-  authorized_key:
-    user: "{{ base_user.name }}"
-    key: "https://github.com/{{ item }}.keys"
-  ignore_errors: yes
-  when: base_user.ssh_keys_gh is defined
-  with_items:
-    - "{{ base_user.ssh_keys_gh | default([]) }}"
-
-- name: Add authorized keys from gitlab
+- name: Add authorized keys from gitlab/github
   authorized_key:
     user: "{{ base_user.name }}"
     key: "https://{{ item }}.keys"
   ignore_errors: yes
-  when: base_user.ssh_keys_gitlab is defined
+  when: base_user.ssh_keys_remote is defined
   with_items:
-    - "{{ base_user.ssh_keys_gitlab | default([]) }}"
+    - "{{ base_user.ssh_keys_remote | default([]) }}"
 
 - name: Add authorized keys from folder
   authorized_key:

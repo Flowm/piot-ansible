@@ -14,7 +14,15 @@
   loop_control:
     loop_var: base_user
     label: "{{ base_user.name }}"
-  when: (system_type is undefined) or (system_type in (base_user.system_types | default([])))
+  # Ignore all disabled users
+  # Run for all users when system type is not set
+  # Single system type: Run if user has system_type
+  # Multiple host system types: Run if the user has one of the system types
+  when: >
+    not base_user.disabled | default(false) and
+    ((system_type is undefined and system_types is undefined) or
+    system_type | default("") in (base_user.system_types) or
+    system_types | default([]) | intersect(base_user.system_types) | length > 0)
 
 - name: Disable users
   include_tasks: user-disable.yml
@@ -23,7 +31,13 @@
   loop_control:
     loop_var: base_user
     label: "{{ base_user.name }}"
-  when: base_user_disable | bool and (system_type is defined) and (system_type not in (base_user.system_types | default([]))) and (not base_user.keep | default(false))
+  when: >
+    base_user_disable | bool and
+    base_user.disabled | default(false) or
+    (not base_user.keep | default(false) and
+    not ((system_type is undefined and system_types is undefined) or
+    system_type | default("") in (base_user.system_types) or
+    system_types | default([]) | intersect(base_user.system_types) | length > 0))
 
 - name: Secure ssh server config
   include_tasks: sshd.yml

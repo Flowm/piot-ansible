@@ -1,0 +1,12 @@
+---
+- name: Create locales
+  locale_gen:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - en_US.UTF-8
+    - de_DE.UTF-8
+
+- name: Set timezone to Europe/Berlin
+  timezone:
+    name: Europe/Berlin

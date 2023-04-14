@@ -1,0 +1,37 @@
+---
+- name: Update package cache and autoremove packages
+  apt:
+    cache_valid_time: 36000
+    autoremove: true
+
+- name: Install minimal packages APT
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - bind9-host
+      - python3-dev
+      - python3-pip
+      - python3-setuptools
+
+- name: Install more packages APT
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - build-essential
+      - picocom
+      - vim-nox
+  when: base_pkg_more | bool
+
+- name: Enable automatic security package updates
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - unattended-upgrades
+      - apt-listchanges
+  when: base_pkg_upgrade | bool

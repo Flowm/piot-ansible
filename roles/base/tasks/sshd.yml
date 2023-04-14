@@ -1,3 +1,11 @@
+- name: Install openssh
+  package:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - openssh-server
+
 - name: Disable empty password login
   lineinfile:
     dest: /etc/ssh/sshd_config

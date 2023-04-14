@@ -1,27 +1,11 @@
 ---
-- name: Update package cache and autoremove packages
-  apt:
-    cache_valid_time: 36000
-    autoremove: true
-  when: ansible_pkg_mgr == 'apt'
+- name: Install packages APT
+  include_tasks: pkg-apt.yml
+  when: base_pkg | bool and ansible_pkg_mgr == 'apt'
 
-- name: Install aptitude for ansible
-  apt:
-    name: "{{ packages }}"
-    state: present
-  vars:
-    packages:
-      - aptitude
-  when: ansible_pkg_mgr == 'apt'
-
-- name: Install selinux for ansible
-  dnf:
-    name: "{{ packages }}"
-    state: present
-  vars:
-    packages:
-      - libselinux-python
-  when: ansible_pkg_mgr == 'dnf'
+- name: Install packages DNF
+  include_tasks: pkg-dnf.yml
+  when: base_pkg | bool and ansible_pkg_mgr == 'dnf'
 
 - name: Install minimal packages
   package:
@@ -32,86 +16,40 @@
       - git
       - vim
 
-- block:
-  - name: Install base packages
-    package:
-      name: "{{ packages }}"
-      state: present
-    vars:
-      packages:
-        - acl
-        - bash-completion
-        - brotli
-        - curl
-        - git
-        - htop
-        - jq
-        - lm-sensors
-        - locales
-        - lsof
-        - man-db
-        - moreutils
-        - mosh
-        - ncdu
-        - passwdqc
-        - pwgen
-        - python3
-        - rdfind
-        - rsync
-        - smartmontools
-        - socat
-        - sudo
-        - tcpdump
-        - telnet
-        - tmux
-        - unp
-        - unzip
-        - wget
-        - zsh
-        - zstd
-
-  - name: Install base packages Debian
-    apt:
-      name: "{{ packages }}"
-      state: present
-    vars:
-      packages:
-        - bind9-host
-        - build-essential
-        - python3-dev
-        - python3-pip
-        - python3-setuptools
-        - vim-nox
-        - picocom
-    when: ansible_pkg_mgr == 'apt'
-
-  - name: Install base packages Fedora
-    dnf:
-      name: "{{ packages }}"
-      state: present
-    vars:
-      packages:
-        - automake
-        - gcc
-        - gcc-c++
-        - kernel-devel
-        - make
-        - python2-devel
-        - python3-devel
-        - redhat-rpm-config
-        - sqlite
-        - vim-enhanced
-    when: ansible_pkg_mgr == 'dnf'
-
-- name: Create locales
-  locale_gen:
-    name: "{{ item }}"
+- name: Install more packages
+  package:
+    name: "{{ packages }}"
     state: present
-  with_items:
-    - en_US.UTF-8
-    - de_DE.UTF-8
-  when: ansible_pkg_mgr == 'apt'
-
-- name: Set timezone to Europe/Berlin
-  timezone:
-    name: Europe/Berlin
+  vars:
+    packages:
+      - acl
+      - bash-completion
+      - brotli
+      - curl
+      - git
+      - htop
+      - jq
+      - lm-sensors
+      - locales
+      - lsof
+      - man-db
+      - moreutils
+      - mosh
+      - ncdu
+      - passwdqc
+      - pwgen
+      - python3
+      - rdfind
+      - rsync
+      - smartmontools
+      - socat
+      - sudo
+      - tcpdump
+      - telnet
+      - tmux
+      - unp
+      - unzip
+      - wget
+      - zsh
+      - zstd
+  when: base_pkg_more | bool

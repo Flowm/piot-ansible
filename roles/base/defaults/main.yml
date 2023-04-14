@@ -1,6 +1,15 @@
 ---
 base_hostname: false
+
 base_pkg: true
+base_pkg_more: true
+base_pkg_upgrade: true
+
+base_sshd: true
+base_sshd_localpw: false
+base_sshd_fail2ban: false
+
+base_locale: true
 
 base_users: []
 #  - name: "vagrant"
@@ -16,11 +25,5 @@ base_user_disable: false
 
 base_dotfiles_url: "https://github.com/Flowm/dotfiles.git"
 base_dotfiles_dir: "/home/{{ base_user.name }}/.myconf"
-
-base_sshd: true
-base_sshd_localpw: false
-base_sshd_fail2ban: false
-
-base_upgrade: true
 
 base_timesync: "none"

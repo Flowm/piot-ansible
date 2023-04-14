@@ -1,0 +1,27 @@
+---
+- name: Install selinux for ansible
+  dnf:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - libselinux-python
+  when: ansible_pkg_mgr == 'dnf'
+
+- name: Install more packages DNF
+  dnf:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - automake
+      - gcc
+      - gcc-c++
+      - kernel-devel
+      - make
+      - python2-devel
+      - python3-devel
+      - redhat-rpm-config
+      - sqlite
+      - vim-enhanced
+  when: base_pkg_more | bool

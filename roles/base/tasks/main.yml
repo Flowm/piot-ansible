@@ -7,6 +7,14 @@
   include_tasks: pkg.yml
   when: base_pkg | bool
 
+- name: Install and secure ssh server config
+  include_tasks: sshd.yml
+  when: base_sshd | bool
+
+- name: Configure locale
+  include_tasks: locale.yml
+  when: base_locale | bool
+
 - name: Add users
   include_tasks: user.yml
   with_items:
@@ -38,14 +46,6 @@
     not ((system_type is undefined and system_types is undefined) or
     system_type | default("") in (base_user.system_types) or
     system_types | default([]) | intersect(base_user.system_types) | length > 0))
-
-- name: Secure ssh server config
-  include_tasks: sshd.yml
-  when: base_sshd | bool
-
-- name: Enable unattended upgrades
-  include_tasks: upgrade.yml
-  when: base_upgrade | bool
 
 - name: Setup time synchronization
   include_tasks: timesync.yml
